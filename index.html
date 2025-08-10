@@ -5,6 +5,48 @@
     <title>Simple Recipes</title>
     <link rel="stylesheet" href="style.css">
 </head>
+    <script>
+  // style tag buttons lightly
+  document.querySelectorAll('.tagbtn').forEach(b=>{
+    b.style.margin='4px'; b.style.padding='6px 10px';
+    b.style.border='1px solid #ddd'; b.style.borderRadius='14px';
+    b.style.background='#fff'; b.style.cursor='pointer';
+  });
+
+  const q = document.getElementById('search');
+  const cards = [...document.querySelectorAll('.recipe')];
+  const activeTags = new Set();
+
+  function normalize(s){ return s.toLowerCase(); }
+  function matches(card){
+    const text = normalize(card.innerText);
+    const query = normalize(q.value.trim());
+    const tagsEl = card.querySelector('.tags');
+    const cardTags = tagsEl ? normalize(tagsEl.innerText) : '';
+    // query match
+    const qOk = !query || text.includes(query);
+    // tag match
+    const tOk = !activeTags.size || [...activeTags].every(t => cardTags.includes(normalize(t)));
+    return qOk && tOk;
+  }
+  function render(){
+    let anyShown=false;
+    cards.forEach(c=>{
+      if(matches(c)){ c.style.display='block'; anyShown=true; }
+      else { c.style.display='none'; }
+    });
+    // optional: scroll to first result on type
+  }
+  q.addEventListener('input', render);
+  document.getElementById('tagFilters').addEventListener('click', e=>{
+    if(e.target.classList.contains('tagbtn')){
+      const t=e.target.getAttribute('data-tag');
+      if(activeTags.has(t)){ activeTags.delete(t); e.target.style.background='#fff'; }
+      else { activeTags.add(t); e.target.style.background='#f2f2f2'; }
+      render();
+    }
+  });
+</script>
 <body>
 <header>
     <h1>Simple Recipes</h1>
@@ -14,6 +56,19 @@
         <a href="cooking_time_chart.html">Cooking Times</a> |
         <a href="tags.html">Browse by Tags</a>
     </nav>
+    <div style="padding:12px 0;">
+  <input id="search" type="text" placeholder="Search recipes (e.g., tofu, vegan, air fryer)" style="width:90%;max-width:560px;padding:10px;border:1px solid #ddd;border-radius:8px;">
+  <div id="tagFilters" style="margin-top:10px;">
+    <button class="tagbtn" data-tag="Vegan">Vegan</button>
+    <button class="tagbtn" data-tag="Vegetarian">Vegetarian</button>
+    <button class="tagbtn" data-tag="Gluten-Free">Gluten-Free</button>
+    <button class="tagbtn" data-tag="High Protein">High Protein</button>
+    <button class="tagbtn" data-tag="Meal Prep">Meal Prep</button>
+    <button class="tagbtn" data-tag="Low Carb">Low Carb</button>
+    <button class="tagbtn" data-tag="Diabetic Friendly">Diabetic Friendly</button>
+    <button class="tagbtn" data-tag="Quick">Quick</button>
+  </div>
+</div>
 </header>
 
 <main>
