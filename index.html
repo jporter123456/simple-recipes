@@ -4,220 +4,56 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Simple Recipes</title>
-  <link rel="stylesheet" href="style.css">
+  <link rel="stylesheet" href="style.css?v=2">
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans:wght@400;600&display=swap" rel="stylesheet">
 </head>
 <body>
-<header>
-  <h1>Simple Recipes</h1>
-  <p>No blogs. No fluff. Just food.</p>
   <nav>
-    <a href="index.html">Home</a> |
-    <a href="cooking_time_chart.html">Cooking Times</a> |
+    <a href="index.html">Home</a>
+    <a href="cooking_time_chart.html">Cooking Times</a>
     <a href="tags.html">Browse by Tags</a>
   </nav>
-</header>
 
-<main>
-
-  <!-- Garlic-Parmesan Green Beans -->
-  <div class="recipe" id="garlic-parm-green-beans">
-    <h2 class="title">Garlic-Parmesan Green Beans</h2>
-    <p class="appliance">
-      Air Fryer: 375°F – 8 min |
-      Instant Pot: 0 min + Quick Release |
-      Oven: 400°F – 18 min
-    </p>
-    <h4>Ingredients:</h4>
-    <ul>
-      <li>2 cups green beans (trimmed)</li>
-      <li>1 tbsp olive oil</li>
-      <li>1 clove garlic, minced</li>
-      <li>2 tbsp grated parmesan (optional for vegan)</li>
-      <li>Salt &amp; pepper to taste</li>
-    </ul>
-    <h4>Instructions:</h4>
-    <ol>
-      <li>Toss green beans with olive oil, garlic, salt, and pepper.</li>
-      <li>Sprinkle with parmesan if using.</li>
-      <li>Cook using preferred method until tender and slightly crisp.</li>
-    </ol>
-    <p class="tags"><strong>Tags:</strong> Vegetarian, Gluten-Free, Low Carb, Side Dish, Quick</p>
+  <h1>Simple Recipes</h1>
+  <div id="search-container">
+    <input type="text" id="search-box" placeholder="Search recipes...">
   </div>
 
-  <!-- Spiced Chickpea Bowl -->
-  <div class="recipe" id="spiced-chickpea-bowl">
-    <h2 class="title">Spiced Chickpea Bowl</h2>
-    <p class="appliance">Air Fryer: 400°F – 12 min | Instant Pot: 5 min + QR | Oven: 425°F – 25 min</p>
-    <h4>Ingredients:</h4>
-    <ul>
-      <li>1 can chickpeas</li>
-      <li>1 tbsp olive oil</li>
-      <li>1 tsp cumin</li>
-      <li>1/2 tsp smoked paprika</li>
-      <li>1/4 tsp turmeric</li>
-      <li>Salt to taste</li>
-    </ul>
-    <h4>Instructions:</h4>
-    <ol>
-      <li>Drain, rinse, and dry chickpeas.</li>
-      <li>Toss with oil and spices.</li>
-      <li>Cook using selected appliance.</li>
-    </ol>
-    <p class="tags"><strong>Tags:</strong> Vegan, Gluten-Free, High Protein, Meal Prep, Ethnic</p>
+  <div id="recipes">
+    <div class="recipe" id="crispy-tofu-bites">
+      <h2 class="title">Crispy Tofu Bites</h2>
+      <p class="appliance">
+        Air Fryer: 400°F, 10 min | Instant Pot: N/A | Oven: 425°F, 20 min
+      </p>
+      <h4>Ingredients:</h4>
+      <ul>
+        <li>1 block firm tofu</li>
+        <li>2 tbsp soy sauce</li>
+        <li>1 tbsp cornstarch</li>
+        <li>1 tbsp olive oil</li>
+      </ul>
+      <h4>Instructions:</h4>
+      <ol>
+        <li>Press tofu to remove water, cut into cubes.</li>
+        <li>Toss with soy sauce, cornstarch, and oil.</li>
+        <li>Cook in chosen appliance until crispy.</li>
+      </ol>
+      <p class="tags"><strong>Tags:</strong> Vegan, High Protein, Gluten-Free</p>
+    </div>
+
+    <!-- Add more recipes here -->
   </div>
 
-  <!-- Zucchini Noodle Stir-Fry -->
-  <div class="recipe" id="zucchini-noodle-stirfry">
-    <h2 class="title">Zucchini Noodle Stir-Fry</h2>
-    <p class="appliance">Stovetop: Med heat – 7 min | Air Fryer: 375°F – 8 min (liner) | Oven: 400°F – 15 min</p>
-    <h4>Ingredients:</h4>
-    <ul>
-      <li>2 zucchini, spiralized</li>
-      <li>1 tbsp sesame oil</li>
-      <li>1 clove garlic, minced</li>
-      <li>1 tsp soy sauce (GF if needed)</li>
-      <li>Sesame seeds to garnish</li>
-    </ul>
-    <h4>Instructions:</h4>
-    <ol>
-      <li>Toss zucchini with garlic, oil, and soy sauce.</li>
-      <li>Cook using selected appliance.</li>
-      <li>Top with sesame seeds.</li>
-    </ol>
-    <p class="tags"><strong>Tags:</strong> Vegan, Gluten-Free, Low Sodium Option, Eastern, Quick</p>
-  </div>
-
-  <!-- Tofu Scramble Breakfast Wrap -->
-  <div class="recipe" id="tofu-scramble-wrap">
-    <h2 class="title">Tofu Scramble Breakfast Wrap</h2>
-    <p class="appliance">Stovetop: Med heat – 10 min | Air Fryer (optional to crisp): 375°F – 4 min</p>
-    <h4>Ingredients:</h4>
-    <ul>
-      <li>1/2 block firm tofu</li>
-      <li>1/2 tsp turmeric</li>
-      <li>1/2 tsp black salt</li>
-      <li>1/4 cup diced peppers</li>
-      <li>1 wrap (gluten-free optional)</li>
-    </ul>
-    <h4>Instructions:</h4>
-    <ol>
-      <li>Crumble tofu; mix with spices and peppers.</li>
-      <li>Cook on stovetop until golden.</li>
-      <li>Fill wrap; air fry to crisp if desired.</li>
-    </ol>
-    <p class="tags"><strong>Tags:</strong> Vegan, Gluten-Free Option, High Protein, Meal Prep, Breakfast</p>
-  </div>
-
-  <!-- Cauliflower Rice Pilaf -->
-  <div class="recipe" id="cauli-rice-pilaf">
-    <h2 class="title">Cauliflower Rice Pilaf</h2>
-    <p class="appliance">Stovetop: Med heat – 10 min | Instant Pot: Manual 1 min + QR</p>
-    <h4>Ingredients:</h4>
-    <ul>
-      <li>2 cups cauliflower rice</li>
-      <li>1 tbsp olive oil</li>
-      <li>1/4 cup diced onion</li>
-      <li>1/4 tsp garlic powder</li>
-      <li>Salt &amp; pepper</li>
-    </ul>
-    <h4>Instructions:</h4>
-    <ol>
-      <li>Sauté onion in oil; add cauliflower rice and seasoning.</li>
-      <li>Cook until tender using chosen method.</li>
-    </ol>
-    <p class="tags"><strong>Tags:</strong> Vegan, Keto, Low Carb, Low Sodium, Diabetic Friendly</p>
-  </div>
-
-  <!-- Sweet Potato Wedges -->
-  <div class="recipe" id="sweet-potato-wedges">
-    <h2 class="title">Sweet Potato Wedges</h2>
-    <p class="appliance">Air Fryer: 375°F – 15 min | Oven: 425°F – 30 min</p>
-    <h4>Ingredients:</h4>
-    <ul>
-      <li>2 medium sweet potatoes</li>
-      <li>1 tbsp olive oil</li>
-      <li>1/2 tsp paprika</li>
-      <li>1/2 tsp cinnamon (optional)</li>
-      <li>Salt to taste</li>
-    </ul>
-    <h4>Instructions:</h4>
-    <ol>
-      <li>Cut into wedges.</li>
-      <li>Toss with oil and seasonings.</li>
-      <li>Cook until crispy using selected method.</li>
-    </ol>
-    <p class="tags"><strong>Tags:</strong> Vegan, Vegetarian, Gluten-Free, Diabetic Friendly, Side Dish</p>
-  </div>
-
-  <!-- Spicy Lentil & Veggie Stew -->
-  <div class="recipe" id="spicy-lentil-stew">
-    <h2 class="title">Spicy Lentil &amp; Veggie Stew</h2>
-    <p class="appliance">Instant Pot: 5 min + NR | Stovetop: Simmer 25 min</p>
-    <h4>Ingredients:</h4>
-    <ul>
-      <li>1 cup red lentils, rinsed</li>
-      <li>1/2 onion, diced</li>
-      <li>1 carrot, diced</li>
-      <li>1 zucchini, diced</li>
-      <li>1 tbsp tomato paste</li>
-      <li>2 cups vegetable broth</li>
-      <li>1 tsp cumin</li>
-      <li>1/2 tsp chili flakes</li>
-      <li>Salt &amp; pepper</li>
-    </ul>
-    <h4>Instructions:</h4>
-    <ol>
-      <li>Add all ingredients to pot.</li>
-      <li>Cook until lentils are tender (per method).</li>
-      <li>Stir and serve.</li>
-    </ol>
-    <p class="tags"><strong>Tags:</strong> Vegan, Gluten-Free, Meal Prep, Ethnic, High Fiber</p>
-  </div>
-
-  <!-- Greek Yogurt Egg Salad -->
-  <div class="recipe" id="greek-yogurt-egg-salad">
-    <h2 class="title">Greek Yogurt Egg Salad</h2>
-    <p class="appliance">Stovetop: Boil eggs – 10 min | Air Fryer (no water): 270°F – 15 min</p>
-    <h4>Ingredients:</h4>
-    <ul>
-      <li>4 boiled eggs</li>
-      <li>2 tbsp plain Greek yogurt</li>
-      <li>1 tsp Dijon mustard</li>
-      <li>1/2 tsp dried dill</li>
-      <li>Salt &amp; pepper</li>
-    </ul>
-    <h4>Instructions:</h4>
-    <ol>
-      <li>Peel and chop eggs.</li>
-      <li>Mix with yogurt, mustard, dill, salt &amp; pepper.</li>
-      <li>Serve in wraps, bowls, or on toast.</li>
-    </ol>
-    <p class="tags"><strong>Tags:</strong> High Protein, Low Carb, Diabetic Friendly, Quick, Vegetarian</p>
-  </div>
-
-  <!-- Coconut Curry Cauliflower Bites -->
-  <div class="recipe" id="coconut-curry-cauliflower">
-    <h2 class="title">Coconut Curry Cauliflower Bites</h2>
-    <p class="appliance">Air Fryer: 400°F – 15 min | Oven: 425°F – 25 min</p>
-    <h4>Ingredients:</h4>
-    <ul>
-      <li>1 head cauliflower, chopped</li>
-      <li>1/2 cup canned coconut milk</li>
-      <li>1 tbsp curry powder</li>
-      <li>1/2 tsp garlic powder</li>
-      <li>Salt to taste</li>
-    </ul>
-    <h4>Instructions:</h4>
-    <ol>
-      <li>Toss cauliflower with coconut milk, curry powder, garlic, and salt.</li>
-      <li>Cook until golden and tender using preferred appliance.</li>
-    </ol>
-    <p class="tags"><strong>Tags:</strong> Vegan, Gluten-Free, Ethnic, Side Dish, Low Sodium</p>
-  </div>
-
-</main>
+<script>
+  const searchBox = document.getElementById('search-box');
+  searchBox.addEventListener('input', function() {
+    const term = searchBox.value.toLowerCase();
+    document.querySelectorAll('.recipe').forEach(recipe => {
+      recipe.style.display = recipe.innerText.toLowerCase().includes(term) ? '' : 'none';
+    });
+  });
+</script>
 </body>
 </html>
