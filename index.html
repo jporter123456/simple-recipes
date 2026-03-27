@@ -1,0 +1,2008 @@
+<!DOCTYPE html>
+
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Just the Recipe</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+:root {
+–bg: #faf8f4;
+–surface: #ffffff;
+–border: #e8e2d9;
+–text: #1a1a18;
+–muted: #7a7469;
+–accent: #b85c1a;
+–tag-bg: #f0ece4;
+–af-bg: #fff8e7;
+–af-border: #e8c97a;
+}
+
+body {
+font-family: ‘Source Sans 3’, sans-serif;
+background: var(–bg);
+color: var(–text);
+min-height: 100vh;
+font-size: 16px;
+line-height: 1.6;
+}
+
+/* INTRO BANNER */
+.intro-banner {
+background: var(–surface);
+border-bottom: 1px solid var(–border);
+padding: 18px 24px;
+font-size: 0.88rem;
+color: var(–muted);
+line-height: 1.7;
+}
+
+.intro-banner strong { color: var(–text); font-weight: 600; }
+
+/* HEADER */
+header {
+background: var(–surface);
+border-bottom: 1px solid var(–border);
+padding: 20px 24px 16px;
+position: sticky;
+top: 0;
+z-index: 100;
+}
+
+.header-top {
+display: flex;
+align-items: baseline;
+gap: 12px;
+margin-bottom: 14px;
+}
+
+h1 {
+font-family: ‘Playfair Display’, serif;
+font-size: 1.7rem;
+font-weight: 700;
+letter-spacing: -0.02em;
+color: var(–text);
+}
+
+.subtitle {
+font-size: 0.82rem;
+color: var(–muted);
+font-weight: 300;
+}
+
+/* CONTROLS */
+.controls {
+display: flex;
+flex-wrap: wrap;
+gap: 10px;
+align-items: center;
+}
+
+.search-wrap {
+position: relative;
+flex: 1;
+min-width: 180px;
+max-width: 360px;
+}
+
+.search-wrap svg {
+position: absolute;
+left: 10px;
+top: 50%;
+transform: translateY(-50%);
+color: var(–muted);
+pointer-events: none;
+}
+
+#search {
+width: 100%;
+padding: 8px 12px 8px 34px;
+border: 1px solid var(–border);
+border-radius: 6px;
+background: var(–bg);
+font-family: inherit;
+font-size: 0.9rem;
+color: var(–text);
+outline: none;
+transition: border-color .15s;
+}
+
+#search:focus { border-color: var(–accent); }
+
+.tags-wrap {
+display: flex;
+flex-wrap: wrap;
+gap: 6px;
+}
+
+.tag-btn {
+font-family: inherit;
+font-size: 0.78rem;
+padding: 4px 10px;
+border: 1px solid var(–border);
+border-radius: 20px;
+background: var(–bg);
+color: var(–muted);
+cursor: pointer;
+transition: all .15s;
+white-space: nowrap;
+}
+
+.tag-btn:hover { border-color: var(–accent); color: var(–accent); }
+.tag-btn.active { background: var(–accent); border-color: var(–accent); color: #fff; }
+
+/* RECIPE COUNT */
+.results-bar {
+padding: 10px 24px 0;
+font-size: 0.8rem;
+color: var(–muted);
+}
+
+/* RECIPE GRID */
+main {
+padding: 16px 24px 40px;
+display: grid;
+grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+gap: 16px;
+}
+
+.recipe-card {
+background: var(–surface);
+border: 1px solid var(–border);
+border-radius: 10px;
+padding: 18px 20px;
+display: flex;
+flex-direction: column;
+gap: 12px;
+transition: box-shadow .15s;
+}
+
+.recipe-card:hover { box-shadow: 0 4px 16px rgba(0,0,0,.07); }
+
+.recipe-card.hidden { display: none; }
+
+.recipe-title {
+font-family: ‘Playfair Display’, serif;
+font-size: 1.05rem;
+font-weight: 700;
+line-height: 1.3;
+color: var(–text);
+}
+
+/* COOK TIMES */
+.cook-times {
+display: flex;
+flex-direction: column;
+gap: 4px;
+}
+
+.time-row {
+display: flex;
+align-items: baseline;
+gap: 8px;
+font-size: 0.83rem;
+}
+
+.time-method {
+font-weight: 600;
+min-width: 82px;
+color: var(–muted);
+font-size: 0.78rem;
+text-transform: uppercase;
+letter-spacing: .04em;
+}
+
+.time-detail { color: var(–text); }
+
+.time-row.af-row {
+background: var(–af-bg);
+border: 1px solid var(–af-border);
+border-radius: 5px;
+padding: 4px 8px;
+}
+
+.time-row.af-row .time-method { color: #9a6b10; }
+.time-row.af-row .time-detail { color: #5a3d08; font-weight: 600; }
+
+/* Ingredients */
+.ingredients h4, .instructions h4 {
+font-size: 0.72rem;
+text-transform: uppercase;
+letter-spacing: .07em;
+color: var(–muted);
+margin-bottom: 5px;
+font-weight: 600;
+}
+
+.ingredients ul {
+list-style: none;
+display: flex;
+flex-direction: column;
+gap: 2px;
+}
+
+.ingredients ul li {
+font-size: 0.87rem;
+display: flex;
+gap: 6px;
+}
+
+.ingredients ul li::before {
+content: ‘·’;
+color: var(–accent);
+font-weight: 700;
+}
+
+.ing-amount { font-weight: 600; white-space: nowrap; }
+
+.scale-row {
+display: flex;
+align-items: center;
+gap: 8px;
+margin-bottom: 6px;
+}
+
+.scale-label { font-size: 0.75rem; color: var(–muted); }
+
+.scale-btn {
+width: 26px;
+height: 26px;
+border: 1px solid var(–border);
+border-radius: 50%;
+background: var(–bg);
+font-size: 1rem;
+cursor: pointer;
+display: flex;
+align-items: center;
+justify-content: center;
+color: var(–text);
+line-height: 1;
+transition: all .12s;
+font-family: inherit;
+}
+
+.scale-btn:hover { border-color: var(–accent); color: var(–accent); }
+
+.scale-display {
+font-size: 0.85rem;
+font-weight: 600;
+min-width: 50px;
+text-align: center;
+color: var(–text);
+}
+
+/* Instructions */
+.instructions ol {
+padding-left: 18px;
+display: flex;
+flex-direction: column;
+gap: 4px;
+}
+
+.instructions ol li { font-size: 0.87rem; }
+
+/* Tags */
+.recipe-tags {
+display: flex;
+flex-wrap: wrap;
+gap: 4px;
+margin-top: 2px;
+}
+
+.recipe-tag {
+font-size: 0.73rem;
+background: var(–tag-bg);
+color: var(–muted);
+padding: 2px 8px;
+border-radius: 20px;
+}
+
+/* No results */
+.no-results {
+grid-column: 1/-1;
+text-align: center;
+padding: 60px 20px;
+color: var(–muted);
+font-size: 1rem;
+display: none;
+}
+
+.no-results.visible { display: block; }
+
+/* PRINT */
+@media print {
+header, .results-bar, .scale-row { display: none !important; }
+body { background: #fff; font-size: 11pt; }
+main { display: block; padding: 0; }
+.recipe-card {
+break-inside: avoid;
+border: 1px solid #ccc;
+margin-bottom: 16px;
+box-shadow: none;
+padding: 12px;
+}
+.recipe-card.hidden { display: none !important; }
+.recipe-tags { display: none; }
+.time-row.af-row { background: #fff8e7; -webkit-print-color-adjust: exact; }
+}
+
+@media (max-width: 480px) {
+header { padding: 14px 16px 12px; }
+main { padding: 12px 16px 32px; }
+.results-bar { padding: 8px 16px 0; }
+}
+</style>
+
+</head>
+<body>
+
+<div class="intro-banner">
+  <p>I got tired of endless scrolling just to find a recipe or cook time.<br>So I built this site.<br><strong>No blog. No scrolling. Just the information you need.</strong></p>
+</div>
+
+<header>
+  <div class="header-top">
+    <h1>Just the Recipe</h1>
+  </div>
+  <div class="controls">
+    <div class="search-wrap">
+      <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
+      <input type="text" id="search" placeholder="Search recipes…" autocomplete="off">
+    </div>
+    <div class="tags-wrap" id="tagFilters"></div>
+  </div>
+
+</header>
+
+<div class="results-bar" id="resultsBar"></div>
+
+<main id="recipeGrid">
+  <div class="no-results" id="noResults">No recipes match your search.</div>
+</main>
+
+<script>
+const RECIPES = [
+  {
+    title: "Garlic-Parmesan Green Beans",
+    times: [
+      { method: "Air Fryer", detail: "375°F – 8 min", af: true },
+      { method: "Instant Pot", detail: "0 min + QR" },
+      { method: "Oven", detail: "400°F – 18 min" }
+    ],
+    ingredients: [
+      { amount: "2 cups", item: "green beans, trimmed" },
+      { amount: "1 tbsp", item: "olive oil" },
+      { amount: "1 clove", item: "garlic, minced" },
+      { amount: "2 tbsp", item: "grated parmesan (optional)" },
+      { amount: "", item: "Salt & pepper" }
+    ],
+    steps: ["Toss beans with oil, garlic, salt & pepper.", "Top with parmesan if using.", "Cook per method until tender, slightly crisp."],
+    tags: ["Vegetarian", "Gluten-Free", "Low Carb", "Quick (under 10 min)"]
+  },
+  {
+    title: "Spiced Chickpea Bowl",
+    times: [
+      { method: "Air Fryer", detail: "400°F – 12 min", af: true },
+      { method: "Instant Pot", detail: "5 min + QR" },
+      { method: "Oven", detail: "425°F – 25 min" }
+    ],
+    ingredients: [
+      { amount: "1 can", item: "chickpeas" },
+      { amount: "1 tbsp", item: "olive oil" },
+      { amount: "1 tsp", item: "cumin" },
+      { amount: "½ tsp", item: "smoked paprika" },
+      { amount: "¼ tsp", item: "turmeric" },
+      { amount: "", item: "Salt to taste" }
+    ],
+    steps: ["Drain, rinse, dry chickpeas.", "Toss with oil and spices.", "Cook using selected appliance."],
+    tags: ["Vegan", "Gluten-Free", "High Protein", "Meal Prep"]
+  },
+  {
+    title: "Zucchini Noodle Stir-Fry",
+    times: [
+      { method: "Stovetop", detail: "Med – 7 min" },
+      { method: "Air Fryer", detail: "375°F – 8 min (liner)", af: true },
+      { method: "Oven", detail: "400°F – 15 min" }
+    ],
+    ingredients: [
+      { amount: "2", item: "zucchini, spiralized" },
+      { amount: "1 tbsp", item: "sesame oil" },
+      { amount: "1 clove", item: "garlic, minced" },
+      { amount: "1 tsp", item: "soy sauce (GF if needed)" },
+      { amount: "", item: "Sesame seeds" }
+    ],
+    steps: ["Toss zucchini with garlic, oil, soy.", "Cook using selected method.", "Top with sesame seeds."],
+    tags: ["Vegan", "Gluten-Free", "Quick (under 10 min)"]
+  },
+  {
+    title: "Tofu Scramble Breakfast Wrap",
+    times: [
+      { method: "Stovetop", detail: "Med – 10 min" },
+      { method: "Air Fryer", detail: "375°F – 4 min (crisp)", af: true }
+    ],
+    ingredients: [
+      { amount: "½ block", item: "firm tofu" },
+      { amount: "½ tsp", item: "turmeric" },
+      { amount: "½ tsp", item: "black salt" },
+      { amount: "¼ cup", item: "diced peppers" },
+      { amount: "1", item: "wrap (GF optional)" }
+    ],
+    steps: ["Crumble tofu; mix with spices and peppers.", "Cook on stovetop until golden.", "Fill wrap; air fry to crisp if desired."],
+    tags: ["Vegan", "High Protein", "Breakfast"]
+  },
+  {
+    title: "Sweet Potato Wedges",
+    times: [
+      { method: "Air Fryer", detail: "375°F – 15 min", af: true },
+      { method: "Oven", detail: "425°F – 30 min" }
+    ],
+    ingredients: [
+      { amount: "2 medium", item: "sweet potatoes" },
+      { amount: "1 tbsp", item: "olive oil" },
+      { amount: "½ tsp", item: "paprika" },
+      { amount: "½ tsp", item: "cinnamon (optional)" },
+      { amount: "", item: "Salt" }
+    ],
+    steps: ["Cut into wedges.", "Toss with oil & seasonings.", "Cook until crispy per method."],
+    tags: ["Vegan", "Gluten-Free", "Diabetic Friendly"]
+  },
+  {
+    title: "Lemon Garlic Salmon",
+    times: [
+      { method: "Air Fryer", detail: "390°F – 8–10 min", af: true },
+      { method: "Oven", detail: "400°F – 12–15 min" },
+      { method: "Instant Pot", detail: "1 min + QR (trivet)" }
+    ],
+    ingredients: [
+      { amount: "2", item: "salmon fillets" },
+      { amount: "1 tsp", item: "olive oil" },
+      { amount: "1 clove", item: "garlic, minced" },
+      { amount: "½", item: "lemon, juiced" },
+      { amount: "", item: "Salt & pepper" }
+    ],
+    steps: ["Season salmon with oil, garlic, lemon, salt & pepper.", "Cook per method until flaky."],
+    tags: ["Gluten-Free", "High Protein", "Quick (under 10 min)"]
+  },
+  {
+    title: "Air Fryer Garlic Mushrooms",
+    times: [
+      { method: "Air Fryer", detail: "380°F – 8–10 min", af: true },
+      { method: "Oven", detail: "425°F – 18 min" },
+      { method: "Stovetop", detail: "Med – 8 min (sauté)" }
+    ],
+    ingredients: [
+      { amount: "12 oz", item: "mushrooms, halved" },
+      { amount: "1 tbsp", item: "olive oil" },
+      { amount: "1 tsp", item: "garlic powder" },
+      { amount: "", item: "Salt & pepper" }
+    ],
+    steps: ["Toss mushrooms with oil, garlic, salt & pepper.", "Cook per method until browned."],
+    tags: ["Vegan", "Gluten-Free", "Quick (under 10 min)"]
+  },
+  {
+    title: "Crispy Parmesan Zucchini Fries",
+    times: [
+      { method: "Air Fryer", detail: "390°F – 10–12 min", af: true },
+      { method: "Oven", detail: "425°F – 20 min" }
+    ],
+    ingredients: [
+      { amount: "2", item: "zucchini, cut into fries" },
+      { amount: "1", item: "egg, beaten (or aquafaba)" },
+      { amount: "⅓ cup", item: "grated parmesan" },
+      { amount: "⅓ cup", item: "breadcrumbs (GF if needed)" }
+    ],
+    steps: ["Dip fries in egg, then parm + crumbs.", "Cook until golden."],
+    tags: ["Vegetarian", "Quick (under 10 min)"]
+  },
+  {
+    title: "Air Fryer Falafel Patties",
+    times: [
+      { method: "Air Fryer", detail: "375°F – 12–14 min", af: true },
+      { method: "Oven", detail: "425°F – 20–22 min" }
+    ],
+    ingredients: [
+      { amount: "1 can", item: "chickpeas, drained" },
+      { amount: "¼ cup", item: "onion" },
+      { amount: "1 clove", item: "garlic" },
+      { amount: "2 tbsp", item: "flour (GF if needed)" },
+      { amount: "1 tsp each", item: "cumin & coriander" }
+    ],
+    steps: ["Pulse ingredients; form small patties.", "Cook until browned."],
+    tags: ["Vegan", "High Fiber"]
+  },
+  {
+    title: "Instant Pot Quinoa",
+    times: [
+      { method: "Instant Pot", detail: "1 min HP + 10 min NR" },
+      { method: "Stovetop", detail: "Simmer 15 min" }
+    ],
+    ingredients: [
+      { amount: "1 cup", item: "quinoa, rinsed" },
+      { amount: "1¼ cups", item: "water" },
+      { amount: "", item: "Pinch salt" }
+    ],
+    steps: ["Add to pot; pressure cook.", "Fluff after release."],
+    tags: ["Vegan", "Gluten-Free", "Meal Prep"]
+  },
+  {
+    title: "5-Minute Tuna Salad",
+    times: [{ method: "No Cook", detail: "5 min" }],
+    ingredients: [
+      { amount: "1 can", item: "tuna" },
+      { amount: "2 tbsp", item: "Greek yogurt or mayo" },
+      { amount: "1 tsp", item: "Dijon mustard" },
+      { amount: "", item: "Salt & pepper" }
+    ],
+    steps: ["Mix all; serve in lettuce cups or on toast."],
+    tags: ["High Protein", "Low Carb", "Quick (under 10 min)"]
+  },
+  {
+    title: "Air Fryer Potato Wedges",
+    times: [
+      { method: "Air Fryer", detail: "390°F – 16–18 min", af: true },
+      { method: "Oven", detail: "425°F – 30 min" }
+    ],
+    ingredients: [
+      { amount: "2", item: "russet potatoes, wedged" },
+      { amount: "1 tbsp", item: "oil" },
+      { amount: "1 tsp", item: "paprika" },
+      { amount: "", item: "Salt" }
+    ],
+    steps: ["Toss; cook until crisp."],
+    tags: ["Vegan", "Gluten-Free"]
+  },
+  {
+    title: "Lemon Herb Chicken Breasts",
+    times: [
+      { method: "Air Fryer", detail: "375°F – 16–18 min", af: true },
+      { method: "Oven", detail: "400°F – 22–25 min" }
+    ],
+    ingredients: [
+      { amount: "2", item: "chicken breasts" },
+      { amount: "1 tbsp", item: "olive oil" },
+      { amount: "1 tsp", item: "Italian seasoning" },
+      { amount: "½", item: "lemon, juiced" },
+      { amount: "", item: "Salt & pepper" }
+    ],
+    steps: ["Coat chicken; cook until 165°F internal temp."],
+    tags: ["High Protein", "Gluten-Free", "Quick (under 10 min)"]
+  },
+  {
+    title: "Garlic Butter Shrimp",
+    times: [{ method: "Stovetop", detail: "5–6 min total" }],
+    ingredients: [
+      { amount: "1 lb", item: "shrimp" },
+      { amount: "2 tbsp", item: "butter" },
+      { amount: "2 cloves", item: "garlic, minced" },
+      { amount: "", item: "Salt & lemon" }
+    ],
+    steps: ["Sauté garlic in butter; add shrimp; cook until pink; finish with lemon."],
+    tags: ["Gluten-Free", "High Protein", "Quick (under 10 min)"]
+  },
+  {
+    title: "Air Fryer Asparagus",
+    times: [
+      { method: "Air Fryer", detail: "380°F – 7–8 min", af: true },
+      { method: "Oven", detail: "425°F – 12–15 min" }
+    ],
+    ingredients: [
+      { amount: "1 bunch", item: "asparagus" },
+      { amount: "1 tsp", item: "olive oil" },
+      { amount: "", item: "Salt & pepper" }
+    ],
+    steps: ["Toss; cook until tender-crisp."],
+    tags: ["Vegan", "Gluten-Free", "Quick (under 10 min)"]
+  },
+  {
+    title: "Sheet-Pan Sausage & Peppers",
+    times: [
+      { method: "Oven", detail: "425°F – 22–25 min" },
+      { method: "Air Fryer", detail: "380°F – 12–14 min (batches)", af: true }
+    ],
+    ingredients: [
+      { amount: "12 oz", item: "sausage, sliced (or vegan)" },
+      { amount: "2", item: "bell peppers, sliced" },
+      { amount: "1", item: "onion, sliced" },
+      { amount: "1 tbsp", item: "oil" },
+      { amount: "", item: "Salt & pepper" }
+    ],
+    steps: ["Toss on tray; cook until browned."],
+    tags: ["Quick (under 10 min)", "Meal Prep"]
+  },
+  {
+    title: "Air Fryer Turkey Meatballs",
+    times: [
+      { method: "Air Fryer", detail: "380°F – 10–12 min", af: true },
+      { method: "Oven", detail: "400°F – 18–20 min" }
+    ],
+    ingredients: [
+      { amount: "1 lb", item: "ground turkey" },
+      { amount: "1", item: "egg" },
+      { amount: "¼ cup", item: "breadcrumbs (GF if needed)" },
+      { amount: "1 tsp", item: "Italian seasoning" },
+      { amount: "", item: "Salt & pepper" }
+    ],
+    steps: ["Mix, roll, cook until done."],
+    tags: ["High Protein", "Meal Prep"]
+  },
+  {
+    title: "Crispy Brussels Sprouts",
+    times: [
+      { method: "Air Fryer", detail: "380°F – 12–14 min", af: true },
+      { method: "Oven", detail: "425°F – 22–25 min" }
+    ],
+    ingredients: [
+      { amount: "1 lb", item: "Brussels sprouts, halved" },
+      { amount: "1 tbsp", item: "oil" },
+      { amount: "", item: "Salt & pepper" }
+    ],
+    steps: ["Toss; cook until browned and tender."],
+    tags: ["Vegan", "Gluten-Free"]
+  },
+  {
+    title: "Greek Chicken Bowls",
+    times: [
+      { method: "Air Fryer", detail: "375°F – 16 min", af: true },
+      { method: "Oven", detail: "400°F – 22 min" }
+    ],
+    ingredients: [
+      { amount: "2", item: "chicken thighs" },
+      { amount: "1 tsp", item: "oregano" },
+      { amount: "1 tsp", item: "lemon juice" },
+      { amount: "1 tsp", item: "olive oil" },
+      { amount: "", item: "Salt & pepper" }
+    ],
+    steps: ["Season; cook; serve with rice, cucumber, yogurt."],
+    tags: ["High Protein", "Gluten-Free"]
+  },
+  {
+    title: "French Toast Sticks",
+    times: [
+      { method: "Air Fryer", detail: "370°F – 7–8 min", af: true },
+      { method: "Stovetop", detail: "2–3 min/side" }
+    ],
+    ingredients: [
+      { amount: "4", item: "bread slices, cut into sticks" },
+      { amount: "1", item: "egg" },
+      { amount: "¼ cup", item: "milk" },
+      { amount: "¼ tsp", item: "cinnamon" }
+    ],
+    steps: ["Dip in egg mix; cook until golden."],
+    tags: ["Vegetarian", "Family-Friendly", "Breakfast"]
+  },
+  {
+    title: "Air Fryer Pork Chops",
+    times: [
+      { method: "Air Fryer", detail: "400°F – 12–14 min", af: true },
+      { method: "Oven", detail: "425°F – 20–22 min" }
+    ],
+    ingredients: [
+      { amount: "2", item: "pork chops" },
+      { amount: "1 tsp", item: "oil" },
+      { amount: "1 tsp", item: "garlic powder" },
+      { amount: "", item: "Salt & pepper" }
+    ],
+    steps: ["Season; cook until 145°F internal temp."],
+    tags: ["High Protein", "Gluten-Free", "Quick (under 10 min)"]
+  },
+  {
+    title: "Cauliflower Steaks",
+    times: [
+      { method: "Air Fryer", detail: "390°F – 14–16 min", af: true },
+      { method: "Oven", detail: "425°F – 25 min" }
+    ],
+    ingredients: [
+      { amount: "1 head", item: "cauliflower, sliced into steaks" },
+      { amount: "1 tbsp", item: "oil" },
+      { amount: "", item: "Garlic powder & salt" }
+    ],
+    steps: ["Season; cook until tender with crisp edges."],
+    tags: ["Vegan", "Gluten-Free", "Low Carb"]
+  },
+  {
+    title: "Instant Pot Chicken Thighs",
+    times: [
+      { method: "Instant Pot", detail: "10 min HP + 5 min NR" },
+      { method: "Air Fryer", detail: "400°F – 4 min (crisp)", af: true }
+    ],
+    ingredients: [
+      { amount: "4", item: "chicken thighs" },
+      { amount: "½ cup", item: "broth" },
+      { amount: "", item: "Salt, pepper, paprika" }
+    ],
+    steps: ["Pressure cook; optional air fry to crisp skin."],
+    tags: ["High Protein", "Gluten-Free", "Meal Prep"]
+  },
+  {
+    title: "Quick Garlic Bread",
+    times: [
+      { method: "Air Fryer", detail: "360°F – 5–6 min", af: true },
+      { method: "Oven", detail: "400°F – 10–12 min" }
+    ],
+    ingredients: [
+      { amount: "", item: "Bread slices" },
+      { amount: "", item: "Butter" },
+      { amount: "", item: "Garlic powder" },
+      { amount: "", item: "Parsley" }
+    ],
+    steps: ["Butter + season bread; cook until toasty."],
+    tags: ["Vegetarian", "Quick (under 10 min)", "Under $15"]
+  },
+  {
+    title: "Mozzarella Sticks",
+    times: [
+      { method: "Air Fryer", detail: "390°F – 6–8 min (frozen)", af: true },
+      { method: "Oven", detail: "425°F – 10–12 min" }
+    ],
+    ingredients: [{ amount: "", item: "Frozen mozzarella sticks" }],
+    steps: ["Cook from frozen until melty and crisp."],
+    tags: ["Vegetarian", "Family-Friendly", "Quick (under 10 min)"]
+  },
+  {
+    title: "Honey Mustard Carrots",
+    times: [
+      { method: "Air Fryer", detail: "380°F – 12–14 min", af: true },
+      { method: "Oven", detail: "425°F – 25 min" }
+    ],
+    ingredients: [
+      { amount: "3 cups", item: "carrot coins" },
+      { amount: "1 tsp", item: "oil" },
+      { amount: "1 tsp", item: "honey" },
+      { amount: "1 tsp", item: "Dijon mustard" },
+      { amount: "", item: "Salt" }
+    ],
+    steps: ["Toss; cook until tender with caramelized edges."],
+    tags: ["Vegetarian", "Gluten-Free"]
+  },
+  {
+    title: "BBQ Chicken Thighs",
+    times: [
+      { method: "Air Fryer", detail: "380°F – 16–18 min", af: true },
+      { method: "Oven", detail: "400°F – 25 min" }
+    ],
+    ingredients: [
+      { amount: "4", item: "chicken thighs" },
+      { amount: "", item: "Salt & pepper" },
+      { amount: "", item: "BBQ sauce" }
+    ],
+    steps: ["Season; cook; brush with BBQ and finish 2–3 min."],
+    tags: ["High Protein"]
+  },
+  {
+    title: "Cinnamon Apples",
+    times: [
+      { method: "Air Fryer", detail: "370°F – 8–10 min", af: true },
+      { method: "Stovetop", detail: "6–8 min" }
+    ],
+    ingredients: [
+      { amount: "2", item: "apples, sliced" },
+      { amount: "1 tsp", item: "butter or coconut oil" },
+      { amount: "½ tsp", item: "cinnamon" }
+    ],
+    steps: ["Toss; cook until soft and fragrant."],
+    tags: ["Vegetarian", "Gluten-Free", "Dessert"]
+  },
+  {
+    title: "Stuffed Peppers",
+    times: [
+      { method: "Air Fryer", detail: "360°F – 12–14 min", af: true },
+      { method: "Oven", detail: "400°F – 20–22 min" }
+    ],
+    ingredients: [
+      { amount: "2", item: "bell peppers, halved" },
+      { amount: "1 cup", item: "cooked rice or quinoa" },
+      { amount: "½ cup", item: "beans or ground meat" },
+      { amount: "¼ cup", item: "cheese (optional)" }
+    ],
+    steps: ["Fill peppers; cook until tender and melty."],
+    tags: ["Gluten-Free", "Meal Prep"]
+  },
+  {
+    title: "Frozen Salmon (No Thaw)",
+    times: [{ method: "Air Fryer", detail: "390°F – 12–14 min", af: true }],
+    ingredients: [
+      { amount: "2", item: "frozen salmon fillets" },
+      { amount: "", item: "Salt, pepper, lemon" }
+    ],
+    steps: ["Season; cook from frozen until flaky."],
+    tags: ["High Protein", "Gluten-Free", "Quick (under 10 min)"]
+  },
+  {
+    title: "Roasted Chickpea Tacos",
+    times: [
+      { method: "Air Fryer", detail: "400°F – 12 min", af: true },
+      { method: "Oven", detail: "425°F – 20 min" }
+    ],
+    ingredients: [
+      { amount: "1 can", item: "chickpeas" },
+      { amount: "1 tsp", item: "taco seasoning" },
+      { amount: "1 tsp", item: "oil" },
+      { amount: "", item: "Tortillas & toppings" }
+    ],
+    steps: ["Toss chickpeas; cook; assemble tacos."],
+    tags: ["Vegan", "Quick (under 10 min)"]
+  },
+  {
+    title: "Air Fryer Bacon",
+    times: [{ method: "Air Fryer", detail: "360°F – 7–9 min", af: true }],
+    ingredients: [{ amount: "", item: "Bacon strips" }],
+    steps: ["Lay in basket; cook to desired crispness."],
+    tags: ["Keto", "Gluten-Free", "Breakfast"]
+  },
+  {
+    title: "Pepperoni Pizza Toast",
+    times: [
+      { method: "Air Fryer", detail: "380°F – 6–8 min", af: true },
+      { method: "Oven", detail: "425°F – 10–12 min" }
+    ],
+    ingredients: [
+      { amount: "", item: "Bread slices" },
+      { amount: "", item: "Pizza sauce" },
+      { amount: "", item: "Mozzarella" },
+      { amount: "", item: "Pepperoni (or veg)" }
+    ],
+    steps: ["Assemble; cook until melty and crisp."],
+    tags: ["Family-Friendly", "Quick (under 10 min)", "Under $15"]
+  },
+  {
+    title: "Crispy Frozen Perogies",
+    times: [
+      { method: "Air Fryer", detail: "380°F – 10–12 min (shake halfway)", af: true },
+      { method: "Oven", detail: "425°F – 18–22 min (flip once)" },
+      { method: "Stovetop", detail: "Boil 3–4 min, then pan-fry 8–10 min" }
+    ],
+    ingredients: [
+      { amount: "", item: "Frozen perogies (any filling)" },
+      { amount: "1–2 tsp", item: "oil or spray" },
+      { amount: "", item: "Salt (optional)" }
+    ],
+    steps: [
+      "Air Fryer: Lightly oil perogies. Cook at 380°F for 10–12 min, shaking halfway.",
+      "Oven: Toss with oil, spread on sheet, bake 18–22 min at 425°F, flip once.",
+      "Stovetop: Boil 3–4 min until they float; drain, then pan-fry in oil 8–10 min until crisp."
+    ],
+    tags: ["Quick (under 10 min)", "Comfort Food"]
+  },
+  {
+    TOMATO_PLACEHOLDER,
+    times: [{ method: "Stovetop", detail: "10 min" }],
+    ingredients: [
+      { amount: "1 can", item: "crushed tomatoes" },
+      { amount: "1 cup", item: "broth" },
+      { amount: "¼ cup", item: "cream or coconut milk" },
+      { amount: "", item: "Garlic powder & salt" }
+    ],
+    steps: ["Simmer all; blend if smoother texture desired."],
+    tags: ["Vegetarian", "Gluten-Free", "Quick (under 10 min)"]
+  },
+  {
+    title: "Simple Pesto Pasta",
+    times: [{ method: "Stovetop", detail: "8–10 min (boil)" }],
+    ingredients: [
+      { amount: "8 oz", item: "pasta (GF if needed)" },
+      { amount: "⅓ cup", item: "pesto" },
+      { amount: "", item: "Parmesan (optional)" }
+    ],
+    steps: ["Boil pasta; toss with pesto; top with cheese."],
+    tags: ["Vegetarian", "Quick (under 10 min)", "Budget", "Under $15"]
+  },
+  {
+    title: "Easy Veggie Fried Rice",
+    times: [{ method: "Stovetop", detail: "8–10 min" }],
+    ingredients: [
+      { amount: "2 cups", item: "cooked rice (cold)" },
+      { amount: "1 cup", item: "mixed vegetables" },
+      { amount: "1", item: "egg (optional)" },
+      { amount: "1 tbsp", item: "soy sauce" },
+      { amount: "1 tsp", item: "oil" }
+    ],
+    steps: ["Stir-fry veg; add rice, soy; push aside, scramble egg; mix."],
+    tags: ["Quick (under 10 min)", "Budget", "Under $15"]
+  },
+  {
+    title: "Peanut Noodle Bowl",
+    times: [{ method: "Stovetop", detail: "8–10 min (boil noodles)" }],
+    ingredients: [
+      { amount: "8 oz", item: "noodles (rice noodles for GF)" },
+      { amount: "2 tbsp", item: "peanut butter" },
+      { amount: "1 tbsp", item: "soy sauce" },
+      { amount: "1 tsp", item: "lime juice" },
+      { amount: "", item: "Chili flakes" }
+    ],
+    steps: ["Cook noodles; toss with sauce ingredients."],
+    tags: ["Quick (under 10 min)"]
+  },
+  {
+    title: "Instant Pot Black Beans (No Soak)",
+    times: [
+      { method: "Instant Pot", detail: "30 min HP + NR" },
+      { method: "Stovetop", detail: "60–70 min" }
+    ],
+    ingredients: [
+      { amount: "1 cup", item: "dry black beans" },
+      { amount: "3 cups", item: "water" },
+      { amount: "½ tsp", item: "salt" }
+    ],
+    steps: ["Pressure cook; season to taste."],
+    tags: ["Vegan", "Gluten-Free", "Meal Prep", "Budget", "Under $15"]
+  },
+  {
+    title: "Baked Feta & Tomatoes",
+    times: [
+      { method: "Oven", detail: "400°F – 20 min" },
+      { method: "Air Fryer", detail: "360°F – 10–12 min", af: true }
+    ],
+    ingredients: [
+      { amount: "1 block", item: "feta" },
+      { amount: "1 pint", item: "cherry tomatoes" },
+      { amount: "1 tsp", item: "olive oil" },
+      { amount: "", item: "Oregano & pepper" }
+    ],
+    steps: ["Bake until tomatoes burst; toss with pasta or bread."],
+    tags: ["Vegetarian", "Quick (under 10 min)"]
+  },
+  {
+    title: "Instant Pot Lentil Soup",
+    times: [
+      { method: "Instant Pot", detail: "10 min HP + NR" },
+      { method: "Stovetop", detail: "Simmer 35 min" }
+    ],
+    ingredients: [
+      { amount: "1 cup", item: "brown/green lentils" },
+      { amount: "1", item: "carrot, diced" },
+      { amount: "½", item: "onion, diced" },
+      { amount: "2 cups", item: "broth" },
+      { amount: "1 tsp", item: "cumin" }
+    ],
+    steps: ["Add all; pressure cook; season to taste."],
+    tags: ["Vegan", "Gluten-Free", "High Fiber", "Meal Prep"]
+  },
+  {
+    title: "Instant Pot Brown Rice",
+    times: [
+      { method: "Instant Pot", detail: "22 min HP + 10 min NR" },
+      { method: "Stovetop", detail: "40–45 min" }
+    ],
+    ingredients: [
+      { amount: "1 cup", item: "brown rice" },
+      { amount: "1¼ cups", item: "water" },
+      { amount: "", item: "Pinch salt" }
+    ],
+    steps: ["Add to pot; cook as listed.", "Fluff and serve."],
+    tags: ["Vegan", "Gluten-Free", "Meal Prep"]
+  },
+  {
+    title: "Instant Pot Hard-Boiled Eggs",
+    times: [{ method: "Instant Pot", detail: "5 min HP, 5 min NR, 5 min ice bath" }],
+    ingredients: [
+      { amount: "6–12", item: "eggs" },
+      { amount: "1 cup", item: "water" }
+    ],
+    steps: ["Place eggs on trivet with water; cook 5 min HP, 5 min NR; ice bath 5 min."],
+    tags: ["High Protein", "Meal Prep", "Breakfast"]
+  },
+  {
+    title: "Instant Pot Pulled Chicken",
+    times: [{ method: "Instant Pot", detail: "12 min HP + 5 min NR" }],
+    ingredients: [
+      { amount: "2", item: "chicken breasts" },
+      { amount: "½ cup", item: "broth" },
+      { amount: "", item: "BBQ or salsa" }
+    ],
+    steps: ["Pressure cook; shred; toss in sauce."],
+    tags: ["High Protein", "Meal Prep", "Gluten-Free"]
+  },
+  {
+    title: "Instant Pot Steel-Cut Oats",
+    times: [
+      { method: "Instant Pot", detail: "4 min HP + 10 min NR" },
+      { method: "Stovetop", detail: "25–30 min" }
+    ],
+    ingredients: [
+      { amount: "1 cup", item: "steel-cut oats" },
+      { amount: "3 cups", item: "water or milk" },
+      { amount: "", item: "Pinch salt" }
+    ],
+    steps: ["Add to pot; cook; stir."],
+    tags: ["Vegetarian", "Breakfast", "Meal Prep"]
+  },
+  {
+    title: "Cauliflower Rice Pilaf",
+    times: [
+      { method: "Stovetop", detail: "Med – 10 min" },
+      { method: "Instant Pot", detail: "Manual 1 min + QR" }
+    ],
+    ingredients: [
+      { amount: "2 cups", item: "cauliflower rice" },
+      { amount: "1 tbsp", item: "olive oil" },
+      { amount: "¼ cup", item: "diced onion" },
+      { amount: "¼ tsp", item: "garlic powder" },
+      { amount: "", item: "Salt & pepper" }
+    ],
+    steps: ["Sauté onion in oil; add cauliflower rice & seasoning.", "Cook until tender using chosen method."],
+    tags: ["Vegan", "Keto", "Low Carb", "Diabetic Friendly"]
+  },
+  {
+    title: "One-Pot Taco Rice",
+    times: [{ method: "Stovetop", detail: "Simmer 18–20 min" }],
+    ingredients: [
+      { amount: "1 cup", item: "rice" },
+      { amount: "1 cup", item: "broth" },
+      { amount: "½ cup", item: "salsa" },
+      { amount: "1 tsp", item: "taco seasoning" },
+      { amount: "", item: "Optional: beans/corn" }
+    ],
+    steps: ["Combine; simmer covered until rice is tender."],
+    tags: ["Gluten-Free", "Meal Prep"]
+  },
+  {
+    title: "Spicy Lentil & Veggie Stew",
+    times: [
+      { method: "Instant Pot", detail: "5 min + NR" },
+      { method: "Stovetop", detail: "Simmer 25 min" }
+    ],
+    ingredients: [
+      { amount: "1 cup", item: "red lentils, rinsed" },
+      { amount: "½", item: "onion, diced" },
+      { amount: "1", item: "carrot, diced" },
+      { amount: "1", item: "zucchini, diced" },
+      { amount: "1 tbsp", item: "tomato paste" },
+      { amount: "2 cups", item: "vegetable broth" },
+      { amount: "1 tsp", item: "cumin" },
+      { amount: "½ tsp", item: "chili flakes" }
+    ],
+    steps: ["Add all ingredients to pot.", "Cook until lentils are tender.", "Stir & serve."],
+    tags: ["Vegan", "Gluten-Free", "Meal Prep", "High Fiber"]
+  },
+  {
+    title: "Greek Yogurt Egg Salad",
+    times: [
+      { method: "Stovetop", detail: "Boil eggs – 10 min" },
+      { method: "Air Fryer", detail: "270°F – 15 min (no water)", af: true }
+    ],
+    ingredients: [
+      { amount: "4", item: "boiled eggs" },
+      { amount: "2 tbsp", item: "plain Greek yogurt" },
+      { amount: "1 tsp", item: "Dijon mustard" },
+      { amount: "½ tsp", item: "dried dill" },
+      { amount: "", item: "Salt & pepper" }
+    ],
+    steps: ["Peel & chop eggs.", "Mix with yogurt, mustard, dill, salt & pepper.", "Serve in wraps, bowls, or on toast."],
+    tags: ["High Protein", "Low Carb", "Vegetarian", "Quick (under 10 min)"]
+  },
+  {
+    title: "Coconut Curry Cauliflower Bites",
+    times: [
+      { method: "Air Fryer", detail: "400°F – 15 min", af: true },
+      { method: "Oven", detail: "425°F – 25 min" }
+    ],
+    ingredients: [
+      { amount: "1 head", item: "cauliflower, chopped" },
+      { amount: "½ cup", item: "canned coconut milk" },
+      { amount: "1 tbsp", item: "curry powder" },
+      { amount: "½ tsp", item: "garlic powder" },
+      { amount: "", item: "Salt" }
+    ],
+    steps: ["Toss cauliflower with coconut milk, curry powder, garlic, salt.", "Cook until golden & tender."],
+    tags: ["Vegan", "Gluten-Free"]
+  },
+  {
+    title: "Crispy Tofu Bites",
+    times: [
+      { method: "Air Fryer", detail: "390°F – 12 min", af: true },
+      { method: "Oven", detail: "425°F – 25 min" },
+      { method: "Stovetop", detail: "Med – 8 min" }
+    ],
+    ingredients: [
+      { amount: "14 oz", item: "extra-firm tofu, pressed & cubed" },
+      { amount: "1 tbsp", item: "oil" },
+      { amount: "1 tbsp", item: "cornstarch" },
+      { amount: "1 tsp", item: "soy sauce (GF if needed)" },
+      { amount: "½ tsp", item: "garlic powder" }
+    ],
+    steps: ["Toss tofu with oil, soy, cornstarch, garlic, pepper.", "Cook until golden and crisp.", "Serve with dip or over rice."],
+    tags: ["Vegan", "High Protein", "Quick (under 10 min)"]
+  },
+  {
+    title: "Sheet-Pan Chickpea & Veg",
+    times: [
+      { method: "Oven", detail: "425°F – 25 min" },
+      { method: "Air Fryer", detail: "380°F – 12–14 min (batches)", af: true }
+    ],
+    ingredients: [
+      { amount: "1 can", item: "chickpeas, drained" },
+      { amount: "2 cups", item: "mixed veg (peppers, onion, zucchini)" },
+      { amount: "1 tbsp", item: "olive oil" },
+      { amount: "1 tsp", item: "paprika" },
+      { amount: "½ tsp", item: "cumin" }
+    ],
+    steps: ["Toss all with oil & spices.", "Roast/air fry until edges brown."],
+    tags: ["Vegan", "Gluten-Free", "Meal Prep", "Quick (under 10 min)"]
+  },
+  {
+    title: "Air Fryer Teriyaki Tofu",
+    times: [
+      { method: "Air Fryer", detail: "390°F – 12–14 min", af: true },
+      { method: "Oven", detail: "425°F – 22 min" }
+    ],
+    ingredients: [
+      { amount: "14 oz", item: "firm tofu, cubed" },
+      { amount: "2 tbsp", item: "teriyaki sauce (GF if needed)" },
+      { amount: "1 tsp", item: "oil" }
+    ],
+    steps: ["Toss tofu in sauce + oil.", "Cook until edges crisp."],
+    tags: ["Vegan", "High Protein", "Quick (under 10 min)"]
+  },
+
+  // ── BEEF & PORK ──
+  {
+    title: "Classic Beef Tacos",
+    times: [{ method: "Stovetop", detail: "10 min" }],
+    ingredients: [
+      { amount: "1 lb", item: "ground beef" },
+      { amount: "1 packet", item: "taco seasoning" },
+      { amount: "⅓ cup", item: "water" },
+      { amount: "", item: "Taco shells & toppings" }
+    ],
+    steps: ["Brown beef; drain fat.", "Add seasoning + water; simmer 5 min.", "Fill shells with toppings."],
+    tags: ["High Protein", "Quick (under 10 min)", "Family-Friendly"]
+  },
+  {
+    title: "Beef & Broccoli Stir-Fry",
+    times: [{ method: "Stovetop", detail: "12 min" }],
+    ingredients: [
+      { amount: "1 lb", item: "flank steak, thinly sliced" },
+      { amount: "2 cups", item: "broccoli florets" },
+      { amount: "3 tbsp", item: "soy sauce" },
+      { amount: "1 tbsp", item: "oyster sauce" },
+      { amount: "1 tsp", item: "sesame oil" },
+      { amount: "2 cloves", item: "garlic, minced" },
+      { amount: "1 tsp", item: "cornstarch" }
+    ],
+    steps: ["Toss beef in cornstarch + 1 tbsp soy.", "Sear beef in hot oil 2 min; set aside.", "Stir-fry broccoli + garlic 3 min.", "Add beef back + remaining sauce; toss until glossy."],
+    tags: ["High Protein", "Gluten-Free"]
+  },
+  {
+    title: "Smash Burgers",
+    times: [{ method: "Stovetop (cast iron)", detail: "8 min" }],
+    ingredients: [
+      { amount: "1 lb", item: "80/20 ground beef" },
+      { amount: "4", item: "burger buns" },
+      { amount: "", item: "American cheese, onion, pickles, sauce" },
+      { amount: "", item: "Salt & pepper" }
+    ],
+    steps: ["Divide beef into 4 loose balls.", "Heat cast iron until smoking; place ball, smash flat immediately.", "Season; cook 2 min, flip, add cheese, cook 1 min.", "Stack and serve."],
+    tags: ["High Protein", "Quick (under 10 min)", "Family-Friendly"]
+  },
+  {
+    title: "Air Fryer Meatballs",
+    times: [
+      { method: "Air Fryer", detail: "380°F – 12 min", af: true },
+      { method: "Oven", detail: "400°F – 20 min" }
+    ],
+    ingredients: [
+      { amount: "1 lb", item: "ground beef or pork" },
+      { amount: "1", item: "egg" },
+      { amount: "¼ cup", item: "breadcrumbs" },
+      { amount: "2 tbsp", item: "parmesan" },
+      { amount: "1 tsp", item: "Italian seasoning" },
+      { amount: "2 cloves", item: "garlic, minced" }
+    ],
+    steps: ["Mix all; roll into 1-inch balls.", "Cook until browned and cooked through.", "Serve with pasta or as a dip."],
+    tags: ["High Protein", "Meal Prep"]
+  },
+  {
+    title: "Sheet-Pan Steak Fajitas",
+    times: [
+      { method: "Oven", detail: "425°F – 20–22 min" },
+      { method: "Air Fryer", detail: "400°F – 12 min (batches)", af: true }
+    ],
+    ingredients: [
+      { amount: "1 lb", item: "flank steak, sliced" },
+      { amount: "3", item: "bell peppers, sliced" },
+      { amount: "1", item: "onion, sliced" },
+      { amount: "2 tbsp", item: "oil" },
+      { amount: "1 tbsp", item: "fajita seasoning" }
+    ],
+    steps: ["Toss everything in oil + seasoning.", "Spread on sheet pan.", "Roast until steak cooked and veg charred at edges.", "Serve in warm tortillas."],
+    tags: ["High Protein", "Gluten-Free", "Meal Prep"]
+  },
+  {
+    title: "Slow Cooker Beef Stew",
+    times: [
+      { method: "Slow Cooker", detail: "Low 8 hr or High 4 hr" },
+      { method: "Instant Pot", detail: "35 min HP + NR" }
+    ],
+    ingredients: [
+      { amount: "1.5 lb", item: "beef chuck, cubed" },
+      { amount: "3", item: "potatoes, diced" },
+      { amount: "2", item: "carrots, sliced" },
+      { amount: "1", item: "onion, diced" },
+      { amount: "2 cups", item: "beef broth" },
+      { amount: "2 tbsp", item: "tomato paste" },
+      { amount: "1 tsp", item: "Worcestershire sauce" }
+    ],
+    steps: ["Add everything to pot.", "Cook until beef is fork-tender.", "Season to taste; thicken with cornstarch slurry if desired."],
+    tags: ["High Protein", "Gluten-Free", "Meal Prep", "Comfort Food"]
+  },
+  {
+    title: "Air Fryer Hot Dogs",
+    times: [
+      { method: "Air Fryer", detail: "370°F – 5–6 min", af: true },
+      { method: "Stovetop", detail: "4 min" }
+    ],
+    ingredients: [
+      { amount: "4", item: "hot dogs" },
+      { amount: "4", item: "buns" },
+      { amount: "", item: "Toppings of choice" }
+    ],
+    steps: ["Score hot dogs lightly.", "Cook until skin blisters.", "Load into buns with toppings."],
+    tags: ["Family-Friendly", "Quick (under 10 min)", "Budget"]
+  },
+
+  // ── CHICKEN ──
+  {
+    title: "Chicken Quesadillas",
+    times: [
+      { method: "Stovetop", detail: "8 min" },
+      { method: "Air Fryer", detail: "375°F – 6 min", af: true }
+    ],
+    ingredients: [
+      { amount: "2", item: "large flour tortillas" },
+      { amount: "1 cup", item: "cooked chicken, shredded" },
+      { amount: "1 cup", item: "shredded cheese" },
+      { amount: "¼ cup", item: "salsa or diced peppers" }
+    ],
+    steps: ["Layer chicken, cheese, salsa on half a tortilla; fold.", "Cook in lightly oiled pan 3 min per side until golden.", "Slice and serve with sour cream."],
+    tags: ["High Protein", "Quick (under 10 min)", "Family-Friendly"]
+  },
+  {
+    title: "Honey Garlic Chicken Thighs",
+    times: [
+      { method: "Stovetop", detail: "18 min" },
+      { method: "Air Fryer", detail: "380°F – 18 min", af: true },
+      { method: "Oven", detail: "400°F – 25 min" }
+    ],
+    ingredients: [
+      { amount: "4", item: "chicken thighs" },
+      { amount: "3 tbsp", item: "honey" },
+      { amount: "3 cloves", item: "garlic, minced" },
+      { amount: "2 tbsp", item: "soy sauce" },
+      { amount: "1 tbsp", item: "butter" }
+    ],
+    steps: ["Season chicken; sear skin-side down 5 min.", "Flip; add honey, garlic, soy + butter.", "Cook until 165°F, basting frequently."],
+    tags: ["High Protein", "Gluten-Free"]
+  },
+  {
+    title: "Chicken Soup (30-Min)",
+    times: [
+      { method: "Stovetop", detail: "30 min" },
+      { method: "Instant Pot", detail: "15 min HP + QR" }
+    ],
+    ingredients: [
+      { amount: "2", item: "chicken breasts" },
+      { amount: "3", item: "carrots, sliced" },
+      { amount: "3", item: "celery stalks, sliced" },
+      { amount: "1", item: "onion, diced" },
+      { amount: "6 cups", item: "chicken broth" },
+      { amount: "1 tsp", item: "garlic powder" },
+      { amount: "", item: "Egg noodles or rice (optional)" }
+    ],
+    steps: ["Add all to pot; bring to boil.", "Simmer until chicken is cooked through; shred.", "Add noodles last 8 min if using."],
+    tags: ["Gluten-Free", "Meal Prep", "Comfort Food"]
+  },
+  {
+    title: "Crispy Chicken Tenders",
+    times: [
+      { method: "Air Fryer", detail: "400°F – 12–14 min", af: true },
+      { method: "Oven", detail: "425°F – 20 min" }
+    ],
+    ingredients: [
+      { amount: "1 lb", item: "chicken tenders" },
+      { amount: "1", item: "egg, beaten" },
+      { amount: "½ cup", item: "panko breadcrumbs" },
+      { amount: "¼ cup", item: "parmesan" },
+      { amount: "1 tsp", item: "garlic powder" },
+      { amount: "1 tsp", item: "paprika" }
+    ],
+    steps: ["Dip chicken in egg, then breadcrumb mixture.", "Cook until golden and 165°F internal temp."],
+    tags: ["High Protein", "Family-Friendly"]
+  },
+  {
+    title: "Teriyaki Chicken Bowl",
+    times: [
+      { method: "Stovetop", detail: "12 min" },
+      { method: "Air Fryer", detail: "380°F – 14 min", af: true }
+    ],
+    ingredients: [
+      { amount: "4", item: "chicken thighs, cubed" },
+      { amount: "3 tbsp", item: "soy sauce" },
+      { amount: "2 tbsp", item: "honey or brown sugar" },
+      { amount: "1 tbsp", item: "rice vinegar" },
+      { amount: "1 tsp", item: "cornstarch" },
+      { amount: "", item: "Cooked rice, sesame seeds, green onion" }
+    ],
+    steps: ["Mix soy, honey, vinegar, cornstarch for sauce.", "Cook chicken until golden.", "Add sauce; simmer until thickened.", "Serve over rice."],
+    tags: ["High Protein", "Meal Prep"]
+  },
+  {
+    title: "Buffalo Chicken Wraps",
+    times: [{ method: "Assemble", detail: "5 min" }],
+    ingredients: [
+      { amount: "2 cups", item: "cooked chicken, shredded" },
+      { amount: "3 tbsp", item: "buffalo sauce" },
+      { amount: "2", item: "large tortillas" },
+      { amount: "½ cup", item: "shredded lettuce" },
+      { amount: "2 tbsp", item: "ranch or blue cheese dressing" }
+    ],
+    steps: ["Toss chicken in buffalo sauce.", "Layer on tortilla with lettuce and dressing.", "Wrap tightly and slice."],
+    tags: ["High Protein", "Quick (under 10 min)", "Meal Prep"]
+  },
+  {
+    title: "White Chicken Chili",
+    times: [
+      { method: "Stovetop", detail: "25 min" },
+      { method: "Instant Pot", detail: "12 min HP + QR" }
+    ],
+    ingredients: [
+      { amount: "2", item: "chicken breasts, cooked & shredded" },
+      { amount: "2 cans", item: "white beans" },
+      { amount: "1 can", item: "diced green chiles" },
+      { amount: "3 cups", item: "chicken broth" },
+      { amount: "1 tsp", item: "cumin" },
+      { amount: "½ cup", item: "cream cheese or sour cream" }
+    ],
+    steps: ["Combine all except cream cheese; simmer 15 min.", "Stir in cream cheese until melted.", "Serve with lime, cilantro, chips."],
+    tags: ["High Protein", "Gluten-Free", "Meal Prep", "Comfort Food"]
+  },
+
+  // ── PASTA ──
+  {
+    title: "Cacio e Pepe",
+    times: [{ method: "Stovetop", detail: "15 min" }],
+    ingredients: [
+      { amount: "8 oz", item: "spaghetti" },
+      { amount: "1 cup", item: "Pecorino Romano, finely grated" },
+      { amount: "½ cup", item: "Parmesan, finely grated" },
+      { amount: "2 tsp", item: "black pepper, coarsely ground" }
+    ],
+    steps: ["Boil pasta in lightly salted water; reserve 1 cup pasta water.", "Toast pepper in dry pan 1 min.", "Combine cheeses with ½ cup hot pasta water to form a cream.", "Toss hot pasta with cheese mixture, adding water until silky."],
+    tags: ["Vegetarian", "Quick (under 10 min)", "Budget"]
+  },
+  {
+    title: "Pasta Aglio e Olio",
+    times: [{ method: "Stovetop", detail: "15 min" }],
+    ingredients: [
+      { amount: "8 oz", item: "spaghetti" },
+      { amount: "5 cloves", item: "garlic, thinly sliced" },
+      { amount: "⅓ cup", item: "olive oil" },
+      { amount: "½ tsp", item: "red pepper flakes" },
+      { amount: "", item: "Parsley & parmesan" }
+    ],
+    steps: ["Cook pasta; reserve ½ cup water.", "Slowly sauté garlic in oil until golden — not brown.", "Add pepper flakes; toss with pasta + splash of water.", "Top with parsley and parmesan."],
+    tags: ["Vegan", "Quick (under 10 min)", "Budget"]
+  },
+  {
+    title: "One-Pot Mac & Cheese",
+    times: [{ method: "Stovetop", detail: "15 min" }],
+    ingredients: [
+      { amount: "8 oz", item: "elbow macaroni" },
+      { amount: "2 cups", item: "milk" },
+      { amount: "1 cup", item: "water" },
+      { amount: "2 cups", item: "shredded cheddar" },
+      { amount: "1 tbsp", item: "butter" },
+      { amount: "", item: "Salt, pepper, mustard powder" }
+    ],
+    steps: ["Cook pasta in milk + water in one pot, stirring often.", "When pasta is tender and liquid mostly absorbed, remove from heat.", "Stir in butter and cheese until melted."],
+    tags: ["Vegetarian", "Family-Friendly", "Budget", "Comfort Food"]
+  },
+  {
+    title: "Creamy Tomato Pasta",
+    times: [{ method: "Stovetop", detail: "20 min" }],
+    ingredients: [
+      { amount: "8 oz", item: "penne or rigatoni" },
+      { amount: "1 can", item: "crushed tomatoes" },
+      { amount: "¼ cup", item: "heavy cream" },
+      { amount: "3 cloves", item: "garlic, minced" },
+      { amount: "1 tbsp", item: "olive oil" },
+      { amount: "½ tsp", item: "red pepper flakes" }
+    ],
+    steps: ["Boil pasta.", "Sauté garlic in oil; add tomatoes + pepper flakes; simmer 8 min.", "Stir in cream; toss with pasta."],
+    tags: ["Vegetarian", "Budget"]
+  },
+
+  // ── EGGS ──
+  {
+    title: "Classic Scrambled Eggs",
+    times: [{ method: "Stovetop", detail: "5 min" }],
+    ingredients: [
+      { amount: "3", item: "eggs" },
+      { amount: "1 tbsp", item: "butter" },
+      { amount: "2 tbsp", item: "milk or cream" },
+      { amount: "", item: "Salt & pepper" }
+    ],
+    steps: ["Whisk eggs, milk, salt.", "Melt butter over low heat; add eggs.", "Stir slowly and continuously until just set.", "Remove from heat while still slightly glossy."],
+    tags: ["Vegetarian", "Gluten-Free", "Quick (under 10 min)", "Breakfast", "Budget"]
+  },
+  {
+    title: "Shakshuka",
+    times: [{ method: "Stovetop", detail: "20 min" }],
+    ingredients: [
+      { amount: "1 can", item: "crushed tomatoes" },
+      { amount: "4", item: "eggs" },
+      { amount: "1", item: "onion, diced" },
+      { amount: "3 cloves", item: "garlic, minced" },
+      { amount: "1 tsp", item: "cumin" },
+      { amount: "1 tsp", item: "paprika" },
+      { amount: "½ tsp", item: "chili flakes" }
+    ],
+    steps: ["Sauté onion + garlic; add spices 1 min.", "Add tomatoes; simmer 8 min.", "Make wells; crack in eggs.", "Cover; cook until whites set but yolks still runny.", "Serve with crusty bread."],
+    tags: ["Vegetarian", "Gluten-Free", "Budget"]
+  },
+  {
+    title: "Avocado Toast & Egg",
+    times: [{ method: "Stovetop + toaster", detail: "8 min" }],
+    ingredients: [
+      { amount: "2 slices", item: "thick bread" },
+      { amount: "1", item: "ripe avocado" },
+      { amount: "2", item: "eggs (fried or poached)" },
+      { amount: "½", item: "lemon, juiced" },
+      { amount: "", item: "Salt, pepper, red pepper flakes" }
+    ],
+    steps: ["Toast bread.", "Mash avocado with lemon and salt.", "Spread on toast; top with egg.", "Season and serve."],
+    tags: ["Vegetarian", "Quick (under 10 min)", "Breakfast"]
+  },
+  {
+    title: "Breakfast Burritos",
+    times: [{ method: "Stovetop", detail: "10 min" }],
+    ingredients: [
+      { amount: "3", item: "eggs, scrambled" },
+      { amount: "2", item: "large flour tortillas" },
+      { amount: "½ cup", item: "shredded cheese" },
+      { amount: "¼ cup", item: "salsa" },
+      { amount: "½ cup", item: "cooked sausage or bacon (optional)" }
+    ],
+    steps: ["Scramble eggs; layer with cheese, sausage, salsa on tortilla.", "Roll tightly; optional: pan-fry seam-side down 1 min.", "Slice and serve."],
+    tags: ["High Protein", "Breakfast", "Meal Prep", "Family-Friendly"]
+  },
+
+  // ── FISH & SEAFOOD ──
+  {
+    title: "Pan-Seared Tilapia",
+    times: [
+      { method: "Stovetop", detail: "8 min" },
+      { method: "Air Fryer", detail: "400°F – 10 min", af: true }
+    ],
+    ingredients: [
+      { amount: "2", item: "tilapia fillets" },
+      { amount: "1 tbsp", item: "olive oil" },
+      { amount: "1 tsp", item: "garlic powder" },
+      { amount: "1 tsp", item: "paprika" },
+      { amount: "", item: "Salt, pepper, lemon" }
+    ],
+    steps: ["Season fillets on both sides.", "Cook in hot oil 3–4 min per side until flaky.", "Finish with a squeeze of lemon."],
+    tags: ["High Protein", "Gluten-Free", "Quick (under 10 min)"]
+  },
+  {
+    title: "Shrimp Tacos",
+    times: [
+      { method: "Stovetop", detail: "8 min" },
+      { method: "Air Fryer", detail: "400°F – 6–7 min", af: true }
+    ],
+    ingredients: [
+      { amount: "1 lb", item: "shrimp, peeled & deveined" },
+      { amount: "1 tsp", item: "cumin" },
+      { amount: "1 tsp", item: "chili powder" },
+      { amount: "1 tbsp", item: "oil" },
+      { amount: "", item: "Tortillas, slaw, lime, salsa" }
+    ],
+    steps: ["Season shrimp; cook 2–3 min per side.", "Assemble tacos with slaw and lime."],
+    tags: ["High Protein", "Gluten-Free", "Quick (under 10 min)"]
+  },
+  {
+    title: "Air Fryer Cod",
+    times: [
+      { method: "Air Fryer", detail: "400°F – 10–12 min", af: true },
+      { method: "Oven", detail: "425°F – 15 min" }
+    ],
+    ingredients: [
+      { amount: "2", item: "cod fillets" },
+      { amount: "1 tbsp", item: "olive oil" },
+      { amount: "1 tsp", item: "lemon zest" },
+      { amount: "1 tsp", item: "garlic powder" },
+      { amount: "", item: "Salt, pepper, fresh parsley" }
+    ],
+    steps: ["Pat fish dry; brush with oil.", "Season generously.", "Cook until fish flakes easily with a fork."],
+    tags: ["High Protein", "Gluten-Free", "Quick (under 10 min)"]
+  },
+
+  // ── SOUPS ──
+  {
+    title: "Black Bean Soup",
+    times: [
+      { method: "Stovetop", detail: "20 min" },
+      { method: "Instant Pot", detail: "8 min HP + QR" }
+    ],
+    ingredients: [
+      { amount: "2 cans", item: "black beans, drained" },
+      { amount: "1", item: "onion, diced" },
+      { amount: "3 cloves", item: "garlic, minced" },
+      { amount: "2 cups", item: "broth" },
+      { amount: "1 tsp", item: "cumin" },
+      { amount: "½ tsp", item: "smoked paprika" }
+    ],
+    steps: ["Sauté onion + garlic; add spices.", "Add beans + broth; simmer 10 min.", "Blend half the soup for creaminess; season to taste."],
+    tags: ["Vegan", "Gluten-Free", "High Fiber", "Budget", "Meal Prep"]
+  },
+  {
+    title: "Creamy Potato Soup",
+    times: [
+      { method: "Stovetop", detail: "25 min" },
+      { method: "Instant Pot", detail: "10 min HP + QR" }
+    ],
+    ingredients: [
+      { amount: "4", item: "russet potatoes, diced" },
+      { amount: "1", item: "onion, diced" },
+      { amount: "3 cups", item: "broth" },
+      { amount: "1 cup", item: "milk or cream" },
+      { amount: "2 tbsp", item: "butter" },
+      { amount: "", item: "Salt, pepper, cheddar & sour cream to top" }
+    ],
+    steps: ["Sauté onion in butter; add potatoes + broth.", "Simmer until tender ~15 min.", "Partially mash or blend; stir in milk.", "Top with cheese and sour cream."],
+    tags: ["Vegetarian", "Gluten-Free", "Comfort Food", "Budget"]
+  },
+  {
+    title: "Classic Beef Chili",
+    times: [
+      { method: "Stovetop", detail: "35 min" },
+      { method: "Slow Cooker", detail: "Low 6 hr or High 3 hr" }
+    ],
+    ingredients: [
+      { amount: "1 lb", item: "ground beef" },
+      { amount: "2 cans", item: "kidney beans" },
+      { amount: "1 can", item: "diced tomatoes" },
+      { amount: "1 can", item: "tomato sauce" },
+      { amount: "1", item: "onion, diced" },
+      { amount: "2 tbsp", item: "chili powder" },
+      { amount: "1 tsp", item: "cumin" }
+    ],
+    steps: ["Brown beef; drain fat.", "Add onion; cook 3 min.", "Add everything else; simmer 20+ min.", "Season and serve with toppings."],
+    tags: ["High Protein", "Gluten-Free", "Meal Prep", "Comfort Food"]
+  },
+  {
+    title: "Minestrone",
+    times: [
+      { method: "Stovetop", detail: "30 min" },
+      { method: "Instant Pot", detail: "8 min HP + QR" }
+    ],
+    ingredients: [
+      { amount: "1 can", item: "diced tomatoes" },
+      { amount: "1 can", item: "kidney beans" },
+      { amount: "1 cup", item: "small pasta (ditalini)" },
+      { amount: "2", item: "carrots, diced" },
+      { amount: "2", item: "celery stalks, diced" },
+      { amount: "1", item: "zucchini, diced" },
+      { amount: "4 cups", item: "vegetable broth" },
+      { amount: "1 tsp", item: "Italian seasoning" }
+    ],
+    steps: ["Sauté carrots + celery 5 min.", "Add everything except pasta; simmer 15 min.", "Add pasta last 8 min."],
+    tags: ["Vegan", "High Fiber", "Meal Prep", "Budget"]
+  },
+
+  // ── SIDES & SALADS ──
+  {
+    title: "Caesar Salad",
+    times: [{ method: "No Cook", detail: "5 min" }],
+    ingredients: [
+      { amount: "1 head", item: "romaine, chopped" },
+      { amount: "3 tbsp", item: "Caesar dressing" },
+      { amount: "¼ cup", item: "parmesan, shaved" },
+      { amount: "1 cup", item: "croutons" }
+    ],
+    steps: ["Toss romaine with dressing.", "Top with parmesan and croutons."],
+    tags: ["Vegetarian", "Quick (under 10 min)"]
+  },
+  {
+    title: "Caprese Salad",
+    times: [{ method: "No Cook", detail: "5 min" }],
+    ingredients: [
+      { amount: "2", item: "large tomatoes, sliced" },
+      { amount: "8 oz", item: "fresh mozzarella, sliced" },
+      { amount: "1 handful", item: "fresh basil" },
+      { amount: "2 tbsp", item: "olive oil" },
+      { amount: "", item: "Salt, pepper, balsamic glaze" }
+    ],
+    steps: ["Alternate tomato and mozzarella slices.", "Tuck basil between layers.", "Drizzle with oil and balsamic; season."],
+    tags: ["Vegetarian", "Gluten-Free", "Quick (under 10 min)"]
+  },
+  {
+    title: "Garlic Mashed Potatoes",
+    times: [
+      { method: "Stovetop", detail: "20 min" },
+      { method: "Instant Pot", detail: "8 min HP + QR" }
+    ],
+    ingredients: [
+      { amount: "2 lbs", item: "potatoes, peeled & cubed" },
+      { amount: "4 tbsp", item: "butter" },
+      { amount: "½ cup", item: "warm milk or cream" },
+      { amount: "3 cloves", item: "garlic, roasted or minced" },
+      { amount: "", item: "Salt & pepper" }
+    ],
+    steps: ["Boil potatoes until fork-tender; drain.", "Mash with butter, milk, garlic.", "Season generously."],
+    tags: ["Vegetarian", "Gluten-Free", "Comfort Food"]
+  },
+  {
+    title: "Roasted Broccoli",
+    times: [
+      { method: "Oven", detail: "425°F – 18–20 min" },
+      { method: "Air Fryer", detail: "390°F – 10–12 min", af: true }
+    ],
+    ingredients: [
+      { amount: "1 large head", item: "broccoli, cut into florets" },
+      { amount: "2 tbsp", item: "olive oil" },
+      { amount: "3 cloves", item: "garlic, minced" },
+      { amount: "", item: "Salt, pepper, lemon zest, parmesan (optional)" }
+    ],
+    steps: ["Toss broccoli with oil, garlic, salt.", "Roast until edges are crispy and charred.", "Finish with lemon and parmesan."],
+    tags: ["Vegan", "Gluten-Free", "Quick (under 10 min)"]
+  },
+  {
+    title: "Cucumber Tomato Salad",
+    times: [{ method: "No Cook", detail: "5 min" }],
+    ingredients: [
+      { amount: "2", item: "cucumbers, sliced" },
+      { amount: "2 cups", item: "cherry tomatoes, halved" },
+      { amount: "¼", item: "red onion, thinly sliced" },
+      { amount: "2 tbsp", item: "olive oil" },
+      { amount: "1 tbsp", item: "red wine vinegar" },
+      { amount: "", item: "Salt, pepper, fresh dill or basil" }
+    ],
+    steps: ["Combine veg in bowl.", "Dress with oil + vinegar; season.", "Let sit 5 min before serving."],
+    tags: ["Vegan", "Gluten-Free", "Quick (under 10 min)", "Low Carb"]
+  },
+  {
+    title: "Corn on the Cob",
+    times: [
+      { method: "Stovetop (boil)", detail: "8–10 min" },
+      { method: "Air Fryer", detail: "390°F – 10 min", af: true },
+      { method: "Oven (in foil)", detail: "400°F – 25 min" }
+    ],
+    ingredients: [
+      { amount: "4", item: "ears corn" },
+      { amount: "2 tbsp", item: "butter" },
+      { amount: "", item: "Salt, pepper; optional: chili, lime, cotija" }
+    ],
+    steps: ["Cook by chosen method until tender.", "Rub with butter; season."],
+    tags: ["Vegetarian", "Gluten-Free", "Quick (under 10 min)", "Family-Friendly"]
+  },
+
+  // ── BREAKFAST ──
+  {
+    title: "Overnight Oats",
+    times: [{ method: "No Cook (prep night before)", detail: "5 min prep" }],
+    ingredients: [
+      { amount: "½ cup", item: "rolled oats" },
+      { amount: "½ cup", item: "milk (any kind)" },
+      { amount: "¼ cup", item: "yogurt" },
+      { amount: "1 tbsp", item: "chia seeds" },
+      { amount: "1 tbsp", item: "honey or maple syrup" },
+      { amount: "", item: "Toppings: berries, banana, nut butter" }
+    ],
+    steps: ["Mix oats, milk, yogurt, chia, sweetener in a jar.", "Cover; refrigerate overnight.", "Top and eat cold."],
+    tags: ["Vegetarian", "Meal Prep", "Breakfast", "Budget"]
+  },
+  {
+    title: "Banana Pancakes (2-Ingredient)",
+    times: [{ method: "Stovetop", detail: "8 min" }],
+    ingredients: [
+      { amount: "1", item: "ripe banana" },
+      { amount: "2", item: "eggs" },
+      { amount: "", item: "Pinch cinnamon, toppings of choice" }
+    ],
+    steps: ["Mash banana well; mix in eggs and cinnamon.", "Cook small pancakes on medium-low 2 min per side.", "Serve with fruit or syrup."],
+    tags: ["Gluten-Free", "Quick (under 10 min)", "Breakfast", "Budget", "Family-Friendly"]
+  },
+  {
+    title: "Smoothie Bowl",
+    times: [{ method: "Blender", detail: "5 min" }],
+    ingredients: [
+      { amount: "1 cup", item: "frozen berries or mango" },
+      { amount: "½", item: "frozen banana" },
+      { amount: "¼ cup", item: "yogurt or coconut milk" },
+      { amount: "", item: "Toppings: granola, fruit, nut butter, seeds" }
+    ],
+    steps: ["Blend fruit + yogurt until thick — add liquid sparingly.", "Pour into bowl; add toppings."],
+    tags: ["Vegetarian", "Gluten-Free", "Breakfast", "Quick (under 10 min)"]
+  },
+
+  // ── SNACKS & LIGHT BITES ──
+  {
+    title: "Homemade Hummus",
+    times: [{ method: "Blender/food processor", detail: "5 min" }],
+    ingredients: [
+      { amount: "1 can", item: "chickpeas, drained (reserve liquid)" },
+      { amount: "2 tbsp", item: "tahini" },
+      { amount: "1", item: "lemon, juiced" },
+      { amount: "1 clove", item: "garlic" },
+      { amount: "2 tbsp", item: "olive oil" }
+    ],
+    steps: ["Blend chickpeas, tahini, lemon, garlic, oil until smooth.", "Add reserved liquid to reach desired consistency.", "Season; drizzle with oil to serve."],
+    tags: ["Vegan", "Gluten-Free", "High Fiber", "Budget", "Quick (under 10 min)"]
+  },
+  {
+    title: "Guacamole",
+    times: [{ method: "No Cook", detail: "5 min" }],
+    ingredients: [
+      { amount: "3", item: "ripe avocados" },
+      { amount: "1", item: "lime, juiced" },
+      { amount: "½", item: "red onion, finely diced" },
+      { amount: "1", item: "jalapeño, minced" },
+      { amount: "2 tbsp", item: "cilantro, chopped" },
+      { amount: "", item: "Salt" }
+    ],
+    steps: ["Mash avocados to desired texture.", "Mix in remaining ingredients.", "Season; serve immediately."],
+    tags: ["Vegan", "Gluten-Free", "Quick (under 10 min)"]
+  },
+  {
+    title: "Cheese Quesadilla",
+    times: [
+      { method: "Stovetop", detail: "5 min" },
+      { method: "Air Fryer", detail: "375°F – 4 min", af: true }
+    ],
+    ingredients: [
+      { amount: "1", item: "large flour tortilla" },
+      { amount: "½ cup", item: "shredded cheese" },
+      { amount: "", item: "Optional: beans, jalapeño, corn" }
+    ],
+    steps: ["Fill half the tortilla with cheese + fillings; fold.", "Cook medium heat 2–3 min per side until golden.", "Slice; serve with salsa or sour cream."],
+    tags: ["Vegetarian", "Quick (under 10 min)", "Family-Friendly", "Budget"]
+  },
+
+  // ── DESSERTS ──
+  {
+    title: "Chocolate Mug Cake",
+    times: [{ method: "Microwave", detail: "90 sec" }],
+    ingredients: [
+      { amount: "4 tbsp", item: "all-purpose flour" },
+      { amount: "4 tbsp", item: "sugar" },
+      { amount: "2 tbsp", item: "cocoa powder" },
+      { amount: "1", item: "egg" },
+      { amount: "3 tbsp", item: "milk" },
+      { amount: "3 tbsp", item: "oil" },
+      { amount: "1 splash", item: "vanilla extract" }
+    ],
+    steps: ["Mix dry ingredients in a large mug.", "Add wet ingredients; mix well.", "Microwave 90 seconds — center will be slightly soft."],
+    tags: ["Vegetarian", "Dessert", "Quick (under 10 min)", "Budget"]
+  },
+  {
+    title: "No-Bake Energy Balls",
+    times: [{ method: "No Cook (chill 30 min)", detail: "10 min + chill" }],
+    ingredients: [
+      { amount: "1 cup", item: "rolled oats" },
+      { amount: "½ cup", item: "peanut butter" },
+      { amount: "⅓ cup", item: "honey" },
+      { amount: "½ cup", item: "chocolate chips or dried fruit" },
+      { amount: "1 tbsp", item: "chia seeds (optional)" }
+    ],
+    steps: ["Mix all ingredients together.", "Refrigerate 30 min.", "Roll into 1-inch balls; keep refrigerated."],
+    tags: ["Vegetarian", "Dessert", "Meal Prep", "Budget"]
+  },
+  {
+    title: "Air Fryer Donuts",
+    times: [{ method: "Air Fryer", detail: "350°F – 5 min", af: true }],
+    ingredients: [
+      { amount: "1 can", item: "refrigerator biscuit dough" },
+      { amount: "½ cup", item: "powdered sugar" },
+      { amount: "2 tbsp", item: "milk" },
+      { amount: "", item: "Optional: sprinkles, cinnamon sugar" }
+    ],
+    steps: ["Cut a hole in each biscuit.", "Air fry 5 min until golden.", "Mix powdered sugar + milk for glaze; dip while warm."],
+    tags: ["Vegetarian", "Dessert", "Family-Friendly", "Quick (under 10 min)"]
+  },
+  {
+    title: "Banana Nice Cream",
+    times: [{ method: "Blender", detail: "5 min (bananas must be frozen)" }],
+    ingredients: [
+      { amount: "3", item: "frozen bananas, sliced" },
+      { amount: "", item: "Optional: peanut butter, cocoa powder, berries" }
+    ],
+    steps: ["Blend frozen banana chunks until smooth and creamy.", "Add any flavoring; blend again.", "Eat immediately or freeze 1 hr for firmer texture."],
+    tags: ["Vegan", "Gluten-Free", "Dessert", "Quick (under 10 min)", "Budget"]
+  },
+
+  // ── INTERNATIONAL ──
+  {
+    title: "Korean Beef Bowl",
+    times: [{ method: "Stovetop", detail: "12 min" }],
+    ingredients: [
+      { amount: "1 lb", item: "ground beef" },
+      { amount: "3 tbsp", item: "soy sauce" },
+      { amount: "1 tbsp", item: "brown sugar" },
+      { amount: "1 tbsp", item: "sesame oil" },
+      { amount: "3 cloves", item: "garlic, minced" },
+      { amount: "½ tsp", item: "ginger" },
+      { amount: "½ tsp", item: "red pepper flakes" },
+      { amount: "", item: "Cooked rice, green onion, sesame seeds" }
+    ],
+    steps: ["Brown ground beef; drain.", "Add garlic + ginger 1 min.", "Stir in soy, sugar, sesame oil, pepper flakes.", "Serve over rice with toppings."],
+    tags: ["High Protein", "Quick (under 10 min)", "Meal Prep"]
+  },
+  {
+    title: "Miso Soup",
+    times: [{ method: "Stovetop", detail: "8 min" }],
+    ingredients: [
+      { amount: "3 cups", item: "water" },
+      { amount: "2 tbsp", item: "white miso paste" },
+      { amount: "½ cup", item: "silken tofu, cubed" },
+      { amount: "2 tbsp", item: "dried wakame seaweed" },
+      { amount: "2", item: "green onions, sliced" }
+    ],
+    steps: ["Bring water to near boil — do not boil.", "Whisk in miso until dissolved.", "Add tofu + wakame; heat 2 min.", "Top with green onion."],
+    tags: ["Vegan", "Quick (under 10 min)"]
+  },
+  {
+    title: "Fried Plantains (Tostones)",
+    times: [
+      { method: "Stovetop", detail: "15 min" },
+      { method: "Air Fryer", detail: "375°F – 12 min", af: true }
+    ],
+    ingredients: [
+      { amount: "2", item: "green plantains, peeled & sliced 1-inch" },
+      { amount: "2 tbsp", item: "oil" },
+      { amount: "", item: "Salt" }
+    ],
+    steps: ["Fry/air fry slices until golden; flatten each with a glass.", "Fry/air fry again until crispy.", "Season with salt immediately."],
+    tags: ["Vegan", "Gluten-Free"]
+  }
+
+  // ─────────────────────────────────────────────────────────────
+  // TO ADD MORE RECIPES — paste above this line using this format:
+  // ,{
+  //   title: "Recipe Name",
+  //   times: [ { method: "...", detail: "...", af: true } ],
+  //   ingredients: [ { amount: "...", item: "..." } ],
+  //   steps: ["Step 1.", "Step 2."],
+  //   tags: ["Tag1", "Tag2"]
+  // }
+  // ─────────────────────────────────────────────────────────────
+];
+
+// Collect all unique tags
+const allTags = [...new Set(RECIPES.flatMap(r => r.tags))].sort();
+
+// State
+let activeTag = null;
+let searchQuery = '';
+const scales = {}; // per-recipe scale multipliers
+
+function buildTagFilters() {
+  const wrap = document.getElementById('tagFilters');
+  allTags.forEach(tag => {
+    const btn = document.createElement('button');
+    btn.className = 'tag-btn';
+    btn.textContent = tag;
+    btn.dataset.tag = tag;
+    btn.onclick = () => {
+      if (activeTag === tag) { activeTag = null; btn.classList.remove('active'); }
+      else {
+        document.querySelectorAll('.tag-btn').forEach(b => b.classList.remove('active'));
+        activeTag = tag;
+        btn.classList.add('active');
+      }
+      filterRecipes();
+    };
+    wrap.appendChild(btn);
+  });
+}
+
+function renderRecipes() {
+  const grid = document.getElementById('recipeGrid');
+  grid.innerHTML = '<div class="no-results" id="noResults">No recipes match your search.</div>';
+
+  RECIPES.forEach((r, i) => {
+    scales[i] = scales[i] || 1;
+    const card = document.createElement('div');
+    card.className = 'recipe-card';
+    card.dataset.idx = i;
+    card.dataset.tags = r.tags.join(',').toLowerCase();
+    card.dataset.title = r.title.toLowerCase();
+
+    // Times
+    const timesHtml = r.times.map(t =>
+      `<div class="time-row${t.af ? ' af-row' : ''}">
+        <span class="time-method">${t.af ? '🌬️ ' : ''}${t.method}</span>
+        <span class="time-detail">${t.detail}</span>
+      </div>`
+    ).join('');
+
+    // Ingredients
+    const ingsHtml = r.ingredients.map((ing, ii) => {
+      const scaledAmt = scaleAmount(ing.amount, scales[i]);
+      return `<li>
+        <span class="ing-amount" data-base="${ing.amount}" data-idx="${i}" data-ii="${ii}">${scaledAmt}</span>
+        <span>${ing.item}</span>
+      </li>`;
+    }).join('');
+
+    // Steps
+    const stepsHtml = r.steps.map(s => `<li>${s}</li>`).join('');
+
+    // Tags
+    const tagsHtml = r.tags.map(t => `<span class="recipe-tag">${t}</span>`).join('');
+
+    card.innerHTML = `
+      <div class="recipe-title">${r.title}</div>
+      <div class="cook-times">${timesHtml}</div>
+      <div class="ingredients">
+        <h4>Ingredients</h4>
+        <div class="scale-row">
+          <span class="scale-label">Servings:</span>
+          <button class="scale-btn" onclick="changeScale(${i}, -1)">−</button>
+          <span class="scale-display" id="scale-${i}">${scales[i]}×</span>
+          <button class="scale-btn" onclick="changeScale(${i}, 1)">+</button>
+        </div>
+        <ul>${ingsHtml}</ul>
+      </div>
+      <div class="instructions">
+        <h4>Instructions</h4>
+        <ol>${stepsHtml}</ol>
+      </div>
+      <div class="recipe-tags">${tagsHtml}</div>
+    `;
+
+    grid.appendChild(card);
+  });
+
+  filterRecipes();
+}
+
+function scaleAmount(amount, scale) {
+  if (!amount || scale === 1) return amount;
+  // Replace numbers (including fractions like ½, ¼) with scaled versions
+  return amount.replace(/(\d+\.?\d*)/g, (match) => {
+    const n = parseFloat(match) * scale;
+    return n % 1 === 0 ? n : parseFloat(n.toFixed(2));
+  });
+}
+
+function changeScale(idx, delta) {
+  scales[idx] = Math.max(1, (scales[idx] || 1) + delta);
+  document.getElementById(`scale-${idx}`).textContent = `${scales[idx]}×`;
+  // Update ingredient amounts
+  const card = document.querySelector(`.recipe-card[data-idx="${idx}"]`);
+  card.querySelectorAll('.ing-amount').forEach(el => {
+    const base = el.dataset.base;
+    el.textContent = scaleAmount(base, scales[idx]);
+  });
+}
+
+function filterRecipes() {
+  const q = searchQuery.toLowerCase();
+  let visible = 0;
+  document.querySelectorAll('.recipe-card').forEach(card => {
+    const titleMatch = card.dataset.title.includes(q);
+    const tagMatch = !activeTag || card.dataset.tags.includes(activeTag.toLowerCase());
+    const show = titleMatch && tagMatch;
+    card.classList.toggle('hidden', !show);
+    if (show) visible++;
+  });
+  document.getElementById('noResults').classList.toggle('visible', visible === 0);
+  document.getElementById('resultsBar').textContent = `${visible} recipe${visible !== 1 ? 's' : ''}`;
+}
+
+// Search
+document.getElementById('search').addEventListener('input', e => {
+  searchQuery = e.target.value;
+  filterRecipes();
+});
+
+// Init
+buildTagFilters();
+renderRecipes();
+</script>
+
+</body>
+</html>
