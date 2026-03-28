@@ -4,7 +4,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Just the Recipe</title>
+<title>Just the Recipe | No Blog. Just Cook Times.</title>
 <link href="https://fonts.googleapis.com/css2?family=Playfair+Display:wght@400;700&family=Source+Sans+3:wght@300;400;600&display=swap" rel="stylesheet">
 <style>
   *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
@@ -32,65 +32,90 @@ line-height: 1.6;
 
 /* INTRO BANNER */
 .intro-banner {
+text-align: center;
+padding: 40px 24px 28px;
 background: var(–surface);
 border-bottom: 1px solid var(–border);
-padding: 18px 24px;
-font-size: 0.88rem;
-color: var(–muted);
-line-height: 1.7;
 }
 
-.intro-banner strong { color: var(–text); font-weight: 600; }
+.intro-banner h1 {
+font-family: ‘Playfair Display’, serif;
+font-size: 2rem;
+font-weight: 700;
+letter-spacing: -0.02em;
+margin-bottom: 10px;
+}
 
-/* HEADER */
+.intro-banner p {
+font-size: 0.92rem;
+color: var(–muted);
+line-height: 1.8;
+max-width: 340px;
+margin: 0 auto;
+}
+
+/* SEARCH BAR (homepage) */
+.search-section {
+padding: 20px 24px 0;
+background: var(–bg);
+}
+
+/* HEADER (sticky controls bar) */
 header {
 background: var(–surface);
 border-bottom: 1px solid var(–border);
-padding: 20px 24px 16px;
+padding: 14px 20px;
 position: sticky;
 top: 0;
 z-index: 100;
 }
 
-.header-top {
+/* Air Fryer tab */
+.af-tab {
 display: flex;
-align-items: baseline;
-gap: 12px;
-margin-bottom: 14px;
+align-items: center;
+gap: 8px;
+margin-bottom: 12px;
+border-bottom: 2px solid var(–border);
+padding-bottom: 0;
 }
 
-h1 {
-font-family: ‘Playfair Display’, serif;
-font-size: 1.7rem;
-font-weight: 700;
-letter-spacing: -0.02em;
-color: var(–text);
-}
-
-.subtitle {
-font-size: 0.82rem;
+.af-tab-btn {
+font-family: inherit;
+font-size: 0.88rem;
+font-weight: 600;
+padding: 8px 16px;
+border: none;
+border-bottom: 3px solid transparent;
+background: none;
+cursor: pointer;
 color: var(–muted);
-font-weight: 300;
+margin-bottom: -2px;
+transition: all .15s;
 }
+
+.af-tab-btn.active {
+color: var(–accent);
+border-bottom-color: var(–accent);
+}
+
+.af-tab-btn:hover { color: var(–accent); }
 
 /* CONTROLS */
 .controls {
 display: flex;
-flex-wrap: wrap;
+flex-direction: column;
 gap: 10px;
-align-items: center;
 }
 
 .search-wrap {
 position: relative;
-flex: 1;
-min-width: 180px;
-max-width: 360px;
+width: 100%;
 }
 
 .search-wrap svg {
 position: absolute;
-left: 10px;
+left: 12px;
 top: 50%;
 transform: translateY(-50%);
 color: var(–muted);
@@ -99,12 +124,12 @@ pointer-events: none;
 
 #search {
 width: 100%;
-padding: 8px 12px 8px 34px;
+padding: 10px 14px 10px 38px;
 border: 1px solid var(–border);
-border-radius: 6px;
+border-radius: 8px;
 background: var(–bg);
 font-family: inherit;
-font-size: 0.9rem;
+font-size: 1rem;
 color: var(–text);
 outline: none;
 transition: border-color .15s;
@@ -340,21 +365,22 @@ main { padding: 12px 16px 32px; }
 <body>
 
 <div class="intro-banner">
-  <p>I got tired of endless scrolling just to find a recipe or cook time.<br>So I built this site.<br><strong>No blog. No scrolling. Just the information you need.</strong></p>
+  <h1>Just the Recipe</h1>
+  <p>I got tired of endless scrolling just to find a recipe or cook time.<br>So I built this.<br>No blog. Just the numbers.</p>
 </div>
 
 <header>
-  <div class="header-top">
-    <h1>Just the Recipe</h1>
+  <div class="af-tab">
+    <button class="af-tab-btn active" id="allTab" onclick="setTab('all')">All Recipes</button>
+    <button class="af-tab-btn" id="afTab" onclick="setTab('af')">🌬️ Air Fryer</button>
   </div>
   <div class="controls">
     <div class="search-wrap">
       <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="11" cy="11" r="8"/><path d="m21 21-4.35-4.35"/></svg>
-      <input type="text" id="search" placeholder="Search recipes…" autocomplete="off">
+      <input type="text" id="search" placeholder="Search a recipe or ingredient…" autocomplete="off">
     </div>
     <div class="tags-wrap" id="tagFilters"></div>
   </div>
-
 </header>
 
 <div class="results-bar" id="resultsBar"></div>
@@ -380,7 +406,7 @@ const RECIPES = [
       { amount: "", item: "Salt & pepper" }
     ],
     steps: ["Toss beans with oil, garlic, salt & pepper.", "Top with parmesan if using.", "Cook per method until tender, slightly crisp."],
-    tags: ["Vegetarian", "Gluten-Free", "Low Carb", "Quick (under 10 min)"]
+    tags: ["Vegetarian", "Gluten-Free", "Low Carb"]
   },
   {
     title: "Spiced Chickpea Bowl",
@@ -398,7 +424,7 @@ const RECIPES = [
       { amount: "", item: "Salt to taste" }
     ],
     steps: ["Drain, rinse, dry chickpeas.", "Toss with oil and spices.", "Cook using selected appliance."],
-    tags: ["Vegan", "Gluten-Free", "High Protein", "Meal Prep"]
+    tags: ["Vegan", "Gluten-Free", "High Protein"]
   },
   {
     title: "Zucchini Noodle Stir-Fry",
@@ -415,7 +441,7 @@ const RECIPES = [
       { amount: "", item: "Sesame seeds" }
     ],
     steps: ["Toss zucchini with garlic, oil, soy.", "Cook using selected method.", "Top with sesame seeds."],
-    tags: ["Vegan", "Gluten-Free", "Quick (under 10 min)"]
+    tags: ["Vegan", "Gluten-Free"]
   },
   {
     title: "Tofu Scramble Breakfast Wrap",
@@ -431,7 +457,7 @@ const RECIPES = [
       { amount: "1", item: "wrap (GF optional)" }
     ],
     steps: ["Crumble tofu; mix with spices and peppers.", "Cook on stovetop until golden.", "Fill wrap; air fry to crisp if desired."],
-    tags: ["Vegan", "High Protein", "Breakfast"]
+    tags: ["Vegan", "High Protein"]
   },
   {
     title: "Sweet Potato Wedges",
@@ -464,7 +490,7 @@ const RECIPES = [
       { amount: "", item: "Salt & pepper" }
     ],
     steps: ["Season salmon with oil, garlic, lemon, salt & pepper.", "Cook per method until flaky."],
-    tags: ["Gluten-Free", "High Protein", "Quick (under 10 min)"]
+    tags: ["Gluten-Free", "High Protein"]
   },
   {
     title: "Air Fryer Garlic Mushrooms",
@@ -480,7 +506,7 @@ const RECIPES = [
       { amount: "", item: "Salt & pepper" }
     ],
     steps: ["Toss mushrooms with oil, garlic, salt & pepper.", "Cook per method until browned."],
-    tags: ["Vegan", "Gluten-Free", "Quick (under 10 min)"]
+    tags: ["Vegan", "Gluten-Free"]
   },
   {
     title: "Crispy Parmesan Zucchini Fries",
@@ -495,7 +521,7 @@ const RECIPES = [
       { amount: "⅓ cup", item: "breadcrumbs (GF if needed)" }
     ],
     steps: ["Dip fries in egg, then parm + crumbs.", "Cook until golden."],
-    tags: ["Vegetarian", "Quick (under 10 min)"]
+    tags: ["Vegetarian"]
   },
   {
     title: "Air Fryer Falafel Patties",
@@ -525,7 +551,7 @@ const RECIPES = [
       { amount: "", item: "Pinch salt" }
     ],
     steps: ["Add to pot; pressure cook.", "Fluff after release."],
-    tags: ["Vegan", "Gluten-Free", "Meal Prep"]
+    tags: ["Vegan", "Gluten-Free"]
   },
   {
     title: "5-Minute Tuna Salad",
@@ -537,7 +563,7 @@ const RECIPES = [
       { amount: "", item: "Salt & pepper" }
     ],
     steps: ["Mix all; serve in lettuce cups or on toast."],
-    tags: ["High Protein", "Low Carb", "Quick (under 10 min)"]
+    tags: ["High Protein", "Low Carb"]
   },
   {
     title: "Air Fryer Potato Wedges",
@@ -568,7 +594,7 @@ const RECIPES = [
       { amount: "", item: "Salt & pepper" }
     ],
     steps: ["Coat chicken; cook until 165°F internal temp."],
-    tags: ["High Protein", "Gluten-Free", "Quick (under 10 min)"]
+    tags: ["High Protein", "Gluten-Free"]
   },
   {
     title: "Garlic Butter Shrimp",
@@ -580,7 +606,7 @@ const RECIPES = [
       { amount: "", item: "Salt & lemon" }
     ],
     steps: ["Sauté garlic in butter; add shrimp; cook until pink; finish with lemon."],
-    tags: ["Gluten-Free", "High Protein", "Quick (under 10 min)"]
+    tags: ["Gluten-Free", "High Protein"]
   },
   {
     title: "Air Fryer Asparagus",
@@ -594,7 +620,7 @@ const RECIPES = [
       { amount: "", item: "Salt & pepper" }
     ],
     steps: ["Toss; cook until tender-crisp."],
-    tags: ["Vegan", "Gluten-Free", "Quick (under 10 min)"]
+    tags: ["Vegan", "Gluten-Free"]
   },
   {
     title: "Sheet-Pan Sausage & Peppers",
@@ -610,7 +636,7 @@ const RECIPES = [
       { amount: "", item: "Salt & pepper" }
     ],
     steps: ["Toss on tray; cook until browned."],
-    tags: ["Quick (under 10 min)", "Meal Prep"]
+    tags: []
   },
   {
     title: "Air Fryer Turkey Meatballs",
@@ -626,7 +652,7 @@ const RECIPES = [
       { amount: "", item: "Salt & pepper" }
     ],
     steps: ["Mix, roll, cook until done."],
-    tags: ["High Protein", "Meal Prep"]
+    tags: ["High Protein"]
   },
   {
     title: "Crispy Brussels Sprouts",
@@ -671,7 +697,7 @@ const RECIPES = [
       { amount: "¼ tsp", item: "cinnamon" }
     ],
     steps: ["Dip in egg mix; cook until golden."],
-    tags: ["Vegetarian", "Family-Friendly", "Breakfast"]
+    tags: ["Vegetarian"]
   },
   {
     title: "Air Fryer Pork Chops",
@@ -686,7 +712,7 @@ const RECIPES = [
       { amount: "", item: "Salt & pepper" }
     ],
     steps: ["Season; cook until 145°F internal temp."],
-    tags: ["High Protein", "Gluten-Free", "Quick (under 10 min)"]
+    tags: ["High Protein", "Gluten-Free"]
   },
   {
     title: "Cauliflower Steaks",
@@ -714,7 +740,7 @@ const RECIPES = [
       { amount: "", item: "Salt, pepper, paprika" }
     ],
     steps: ["Pressure cook; optional air fry to crisp skin."],
-    tags: ["High Protein", "Gluten-Free", "Meal Prep"]
+    tags: ["High Protein", "Gluten-Free"]
   },
   {
     title: "Quick Garlic Bread",
@@ -729,7 +755,7 @@ const RECIPES = [
       { amount: "", item: "Parsley" }
     ],
     steps: ["Butter + season bread; cook until toasty."],
-    tags: ["Vegetarian", "Quick (under 10 min)", "Under $15"]
+    tags: ["Vegetarian"]
   },
   {
     title: "Mozzarella Sticks",
@@ -739,7 +765,7 @@ const RECIPES = [
     ],
     ingredients: [{ amount: "", item: "Frozen mozzarella sticks" }],
     steps: ["Cook from frozen until melty and crisp."],
-    tags: ["Vegetarian", "Family-Friendly", "Quick (under 10 min)"]
+    tags: ["Vegetarian"]
   },
   {
     title: "Honey Mustard Carrots",
@@ -798,7 +824,7 @@ const RECIPES = [
       { amount: "¼ cup", item: "cheese (optional)" }
     ],
     steps: ["Fill peppers; cook until tender and melty."],
-    tags: ["Gluten-Free", "Meal Prep"]
+    tags: ["Gluten-Free"]
   },
   {
     title: "Frozen Salmon (No Thaw)",
@@ -808,7 +834,7 @@ const RECIPES = [
       { amount: "", item: "Salt, pepper, lemon" }
     ],
     steps: ["Season; cook from frozen until flaky."],
-    tags: ["High Protein", "Gluten-Free", "Quick (under 10 min)"]
+    tags: ["High Protein", "Gluten-Free"]
   },
   {
     title: "Roasted Chickpea Tacos",
@@ -823,14 +849,14 @@ const RECIPES = [
       { amount: "", item: "Tortillas & toppings" }
     ],
     steps: ["Toss chickpeas; cook; assemble tacos."],
-    tags: ["Vegan", "Quick (under 10 min)"]
+    tags: ["Vegan"]
   },
   {
     title: "Air Fryer Bacon",
     times: [{ method: "Air Fryer", detail: "360°F – 7–9 min", af: true }],
     ingredients: [{ amount: "", item: "Bacon strips" }],
     steps: ["Lay in basket; cook to desired crispness."],
-    tags: ["Keto", "Gluten-Free", "Breakfast"]
+    tags: ["Keto", "Gluten-Free"]
   },
   {
     title: "Pepperoni Pizza Toast",
@@ -845,7 +871,7 @@ const RECIPES = [
       { amount: "", item: "Pepperoni (or veg)" }
     ],
     steps: ["Assemble; cook until melty and crisp."],
-    tags: ["Family-Friendly", "Quick (under 10 min)", "Under $15"]
+    tags: []
   },
   {
     title: "Crispy Frozen Perogies",
@@ -864,10 +890,10 @@ const RECIPES = [
       "Oven: Toss with oil, spread on sheet, bake 18–22 min at 425°F, flip once.",
       "Stovetop: Boil 3–4 min until they float; drain, then pan-fry in oil 8–10 min until crisp."
     ],
-    tags: ["Quick (under 10 min)", "Comfort Food"]
+    tags: []
   },
   {
-    TOMATO_PLACEHOLDER,
+    title: "10-Minute Tomato Soup",
     times: [{ method: "Stovetop", detail: "10 min" }],
     ingredients: [
       { amount: "1 can", item: "crushed tomatoes" },
@@ -876,7 +902,7 @@ const RECIPES = [
       { amount: "", item: "Garlic powder & salt" }
     ],
     steps: ["Simmer all; blend if smoother texture desired."],
-    tags: ["Vegetarian", "Gluten-Free", "Quick (under 10 min)"]
+    tags: ["Vegetarian", "Gluten-Free"]
   },
   {
     title: "Simple Pesto Pasta",
@@ -887,7 +913,7 @@ const RECIPES = [
       { amount: "", item: "Parmesan (optional)" }
     ],
     steps: ["Boil pasta; toss with pesto; top with cheese."],
-    tags: ["Vegetarian", "Quick (under 10 min)", "Budget", "Under $15"]
+    tags: ["Vegetarian"]
   },
   {
     title: "Easy Veggie Fried Rice",
@@ -900,7 +926,7 @@ const RECIPES = [
       { amount: "1 tsp", item: "oil" }
     ],
     steps: ["Stir-fry veg; add rice, soy; push aside, scramble egg; mix."],
-    tags: ["Quick (under 10 min)", "Budget", "Under $15"]
+    tags: []
   },
   {
     title: "Peanut Noodle Bowl",
@@ -913,7 +939,7 @@ const RECIPES = [
       { amount: "", item: "Chili flakes" }
     ],
     steps: ["Cook noodles; toss with sauce ingredients."],
-    tags: ["Quick (under 10 min)"]
+    tags: []
   },
   {
     title: "Instant Pot Black Beans (No Soak)",
@@ -927,7 +953,7 @@ const RECIPES = [
       { amount: "½ tsp", item: "salt" }
     ],
     steps: ["Pressure cook; season to taste."],
-    tags: ["Vegan", "Gluten-Free", "Meal Prep", "Budget", "Under $15"]
+    tags: ["Vegan", "Gluten-Free"]
   },
   {
     title: "Baked Feta & Tomatoes",
@@ -942,7 +968,7 @@ const RECIPES = [
       { amount: "", item: "Oregano & pepper" }
     ],
     steps: ["Bake until tomatoes burst; toss with pasta or bread."],
-    tags: ["Vegetarian", "Quick (under 10 min)"]
+    tags: ["Vegetarian"]
   },
   {
     title: "Instant Pot Lentil Soup",
@@ -958,7 +984,7 @@ const RECIPES = [
       { amount: "1 tsp", item: "cumin" }
     ],
     steps: ["Add all; pressure cook; season to taste."],
-    tags: ["Vegan", "Gluten-Free", "High Fiber", "Meal Prep"]
+    tags: ["Vegan", "Gluten-Free", "High Fiber"]
   },
   {
     title: "Instant Pot Brown Rice",
@@ -972,7 +998,7 @@ const RECIPES = [
       { amount: "", item: "Pinch salt" }
     ],
     steps: ["Add to pot; cook as listed.", "Fluff and serve."],
-    tags: ["Vegan", "Gluten-Free", "Meal Prep"]
+    tags: ["Vegan", "Gluten-Free"]
   },
   {
     title: "Instant Pot Hard-Boiled Eggs",
@@ -982,7 +1008,7 @@ const RECIPES = [
       { amount: "1 cup", item: "water" }
     ],
     steps: ["Place eggs on trivet with water; cook 5 min HP, 5 min NR; ice bath 5 min."],
-    tags: ["High Protein", "Meal Prep", "Breakfast"]
+    tags: ["High Protein"]
   },
   {
     title: "Instant Pot Pulled Chicken",
@@ -993,7 +1019,7 @@ const RECIPES = [
       { amount: "", item: "BBQ or salsa" }
     ],
     steps: ["Pressure cook; shred; toss in sauce."],
-    tags: ["High Protein", "Meal Prep", "Gluten-Free"]
+    tags: ["High Protein", "Gluten-Free"]
   },
   {
     title: "Instant Pot Steel-Cut Oats",
@@ -1007,7 +1033,7 @@ const RECIPES = [
       { amount: "", item: "Pinch salt" }
     ],
     steps: ["Add to pot; cook; stir."],
-    tags: ["Vegetarian", "Breakfast", "Meal Prep"]
+    tags: ["Vegetarian"]
   },
   {
     title: "Cauliflower Rice Pilaf",
@@ -1036,7 +1062,7 @@ const RECIPES = [
       { amount: "", item: "Optional: beans/corn" }
     ],
     steps: ["Combine; simmer covered until rice is tender."],
-    tags: ["Gluten-Free", "Meal Prep"]
+    tags: ["Gluten-Free"]
   },
   {
     title: "Spicy Lentil & Veggie Stew",
@@ -1055,7 +1081,7 @@ const RECIPES = [
       { amount: "½ tsp", item: "chili flakes" }
     ],
     steps: ["Add all ingredients to pot.", "Cook until lentils are tender.", "Stir & serve."],
-    tags: ["Vegan", "Gluten-Free", "Meal Prep", "High Fiber"]
+    tags: ["Vegan", "Gluten-Free", "High Fiber"]
   },
   {
     title: "Greek Yogurt Egg Salad",
@@ -1071,7 +1097,7 @@ const RECIPES = [
       { amount: "", item: "Salt & pepper" }
     ],
     steps: ["Peel & chop eggs.", "Mix with yogurt, mustard, dill, salt & pepper.", "Serve in wraps, bowls, or on toast."],
-    tags: ["High Protein", "Low Carb", "Vegetarian", "Quick (under 10 min)"]
+    tags: ["High Protein", "Low Carb", "Vegetarian"]
   },
   {
     title: "Coconut Curry Cauliflower Bites",
@@ -1104,7 +1130,7 @@ const RECIPES = [
       { amount: "½ tsp", item: "garlic powder" }
     ],
     steps: ["Toss tofu with oil, soy, cornstarch, garlic, pepper.", "Cook until golden and crisp.", "Serve with dip or over rice."],
-    tags: ["Vegan", "High Protein", "Quick (under 10 min)"]
+    tags: ["Vegan", "High Protein"]
   },
   {
     title: "Sheet-Pan Chickpea & Veg",
@@ -1120,7 +1146,7 @@ const RECIPES = [
       { amount: "½ tsp", item: "cumin" }
     ],
     steps: ["Toss all with oil & spices.", "Roast/air fry until edges brown."],
-    tags: ["Vegan", "Gluten-Free", "Meal Prep", "Quick (under 10 min)"]
+    tags: ["Vegan", "Gluten-Free"]
   },
   {
     title: "Air Fryer Teriyaki Tofu",
@@ -1134,7 +1160,7 @@ const RECIPES = [
       { amount: "1 tsp", item: "oil" }
     ],
     steps: ["Toss tofu in sauce + oil.", "Cook until edges crisp."],
-    tags: ["Vegan", "High Protein", "Quick (under 10 min)"]
+    tags: ["Vegan", "High Protein"]
   },
 
   // ── BEEF & PORK ──
@@ -1148,7 +1174,7 @@ const RECIPES = [
       { amount: "", item: "Taco shells & toppings" }
     ],
     steps: ["Brown beef; drain fat.", "Add seasoning + water; simmer 5 min.", "Fill shells with toppings."],
-    tags: ["High Protein", "Quick (under 10 min)", "Family-Friendly"]
+    tags: ["High Protein"]
   },
   {
     title: "Beef & Broccoli Stir-Fry",
@@ -1175,7 +1201,7 @@ const RECIPES = [
       { amount: "", item: "Salt & pepper" }
     ],
     steps: ["Divide beef into 4 loose balls.", "Heat cast iron until smoking; place ball, smash flat immediately.", "Season; cook 2 min, flip, add cheese, cook 1 min.", "Stack and serve."],
-    tags: ["High Protein", "Quick (under 10 min)", "Family-Friendly"]
+    tags: ["High Protein"]
   },
   {
     title: "Air Fryer Meatballs",
@@ -1192,7 +1218,7 @@ const RECIPES = [
       { amount: "2 cloves", item: "garlic, minced" }
     ],
     steps: ["Mix all; roll into 1-inch balls.", "Cook until browned and cooked through.", "Serve with pasta or as a dip."],
-    tags: ["High Protein", "Meal Prep"]
+    tags: ["High Protein"]
   },
   {
     title: "Sheet-Pan Steak Fajitas",
@@ -1208,7 +1234,7 @@ const RECIPES = [
       { amount: "1 tbsp", item: "fajita seasoning" }
     ],
     steps: ["Toss everything in oil + seasoning.", "Spread on sheet pan.", "Roast until steak cooked and veg charred at edges.", "Serve in warm tortillas."],
-    tags: ["High Protein", "Gluten-Free", "Meal Prep"]
+    tags: ["High Protein", "Gluten-Free"]
   },
   {
     title: "Slow Cooker Beef Stew",
@@ -1226,7 +1252,7 @@ const RECIPES = [
       { amount: "1 tsp", item: "Worcestershire sauce" }
     ],
     steps: ["Add everything to pot.", "Cook until beef is fork-tender.", "Season to taste; thicken with cornstarch slurry if desired."],
-    tags: ["High Protein", "Gluten-Free", "Meal Prep", "Comfort Food"]
+    tags: ["High Protein", "Gluten-Free"]
   },
   {
     title: "Air Fryer Hot Dogs",
@@ -1240,7 +1266,7 @@ const RECIPES = [
       { amount: "", item: "Toppings of choice" }
     ],
     steps: ["Score hot dogs lightly.", "Cook until skin blisters.", "Load into buns with toppings."],
-    tags: ["Family-Friendly", "Quick (under 10 min)", "Budget"]
+    tags: []
   },
 
   // ── CHICKEN ──
@@ -1257,7 +1283,7 @@ const RECIPES = [
       { amount: "¼ cup", item: "salsa or diced peppers" }
     ],
     steps: ["Layer chicken, cheese, salsa on half a tortilla; fold.", "Cook in lightly oiled pan 3 min per side until golden.", "Slice and serve with sour cream."],
-    tags: ["High Protein", "Quick (under 10 min)", "Family-Friendly"]
+    tags: ["High Protein"]
   },
   {
     title: "Honey Garlic Chicken Thighs",
@@ -1292,7 +1318,7 @@ const RECIPES = [
       { amount: "", item: "Egg noodles or rice (optional)" }
     ],
     steps: ["Add all to pot; bring to boil.", "Simmer until chicken is cooked through; shred.", "Add noodles last 8 min if using."],
-    tags: ["Gluten-Free", "Meal Prep", "Comfort Food"]
+    tags: ["Gluten-Free"]
   },
   {
     title: "Crispy Chicken Tenders",
@@ -1309,7 +1335,7 @@ const RECIPES = [
       { amount: "1 tsp", item: "paprika" }
     ],
     steps: ["Dip chicken in egg, then breadcrumb mixture.", "Cook until golden and 165°F internal temp."],
-    tags: ["High Protein", "Family-Friendly"]
+    tags: ["High Protein"]
   },
   {
     title: "Teriyaki Chicken Bowl",
@@ -1326,7 +1352,7 @@ const RECIPES = [
       { amount: "", item: "Cooked rice, sesame seeds, green onion" }
     ],
     steps: ["Mix soy, honey, vinegar, cornstarch for sauce.", "Cook chicken until golden.", "Add sauce; simmer until thickened.", "Serve over rice."],
-    tags: ["High Protein", "Meal Prep"]
+    tags: ["High Protein"]
   },
   {
     title: "Buffalo Chicken Wraps",
@@ -1339,7 +1365,7 @@ const RECIPES = [
       { amount: "2 tbsp", item: "ranch or blue cheese dressing" }
     ],
     steps: ["Toss chicken in buffalo sauce.", "Layer on tortilla with lettuce and dressing.", "Wrap tightly and slice."],
-    tags: ["High Protein", "Quick (under 10 min)", "Meal Prep"]
+    tags: ["High Protein"]
   },
   {
     title: "White Chicken Chili",
@@ -1356,7 +1382,7 @@ const RECIPES = [
       { amount: "½ cup", item: "cream cheese or sour cream" }
     ],
     steps: ["Combine all except cream cheese; simmer 15 min.", "Stir in cream cheese until melted.", "Serve with lime, cilantro, chips."],
-    tags: ["High Protein", "Gluten-Free", "Meal Prep", "Comfort Food"]
+    tags: ["High Protein", "Gluten-Free"]
   },
 
   // ── PASTA ──
@@ -1370,7 +1396,7 @@ const RECIPES = [
       { amount: "2 tsp", item: "black pepper, coarsely ground" }
     ],
     steps: ["Boil pasta in lightly salted water; reserve 1 cup pasta water.", "Toast pepper in dry pan 1 min.", "Combine cheeses with ½ cup hot pasta water to form a cream.", "Toss hot pasta with cheese mixture, adding water until silky."],
-    tags: ["Vegetarian", "Quick (under 10 min)", "Budget"]
+    tags: ["Vegetarian"]
   },
   {
     title: "Pasta Aglio e Olio",
@@ -1383,7 +1409,7 @@ const RECIPES = [
       { amount: "", item: "Parsley & parmesan" }
     ],
     steps: ["Cook pasta; reserve ½ cup water.", "Slowly sauté garlic in oil until golden — not brown.", "Add pepper flakes; toss with pasta + splash of water.", "Top with parsley and parmesan."],
-    tags: ["Vegan", "Quick (under 10 min)", "Budget"]
+    tags: ["Vegan"]
   },
   {
     title: "One-Pot Mac & Cheese",
@@ -1397,7 +1423,7 @@ const RECIPES = [
       { amount: "", item: "Salt, pepper, mustard powder" }
     ],
     steps: ["Cook pasta in milk + water in one pot, stirring often.", "When pasta is tender and liquid mostly absorbed, remove from heat.", "Stir in butter and cheese until melted."],
-    tags: ["Vegetarian", "Family-Friendly", "Budget", "Comfort Food"]
+    tags: ["Vegetarian"]
   },
   {
     title: "Creamy Tomato Pasta",
@@ -1411,7 +1437,7 @@ const RECIPES = [
       { amount: "½ tsp", item: "red pepper flakes" }
     ],
     steps: ["Boil pasta.", "Sauté garlic in oil; add tomatoes + pepper flakes; simmer 8 min.", "Stir in cream; toss with pasta."],
-    tags: ["Vegetarian", "Budget"]
+    tags: ["Vegetarian"]
   },
 
   // ── EGGS ──
@@ -1425,7 +1451,7 @@ const RECIPES = [
       { amount: "", item: "Salt & pepper" }
     ],
     steps: ["Whisk eggs, milk, salt.", "Melt butter over low heat; add eggs.", "Stir slowly and continuously until just set.", "Remove from heat while still slightly glossy."],
-    tags: ["Vegetarian", "Gluten-Free", "Quick (under 10 min)", "Breakfast", "Budget"]
+    tags: ["Vegetarian", "Gluten-Free"]
   },
   {
     title: "Shakshuka",
@@ -1440,7 +1466,7 @@ const RECIPES = [
       { amount: "½ tsp", item: "chili flakes" }
     ],
     steps: ["Sauté onion + garlic; add spices 1 min.", "Add tomatoes; simmer 8 min.", "Make wells; crack in eggs.", "Cover; cook until whites set but yolks still runny.", "Serve with crusty bread."],
-    tags: ["Vegetarian", "Gluten-Free", "Budget"]
+    tags: ["Vegetarian", "Gluten-Free"]
   },
   {
     title: "Avocado Toast & Egg",
@@ -1453,7 +1479,7 @@ const RECIPES = [
       { amount: "", item: "Salt, pepper, red pepper flakes" }
     ],
     steps: ["Toast bread.", "Mash avocado with lemon and salt.", "Spread on toast; top with egg.", "Season and serve."],
-    tags: ["Vegetarian", "Quick (under 10 min)", "Breakfast"]
+    tags: ["Vegetarian"]
   },
   {
     title: "Breakfast Burritos",
@@ -1466,7 +1492,7 @@ const RECIPES = [
       { amount: "½ cup", item: "cooked sausage or bacon (optional)" }
     ],
     steps: ["Scramble eggs; layer with cheese, sausage, salsa on tortilla.", "Roll tightly; optional: pan-fry seam-side down 1 min.", "Slice and serve."],
-    tags: ["High Protein", "Breakfast", "Meal Prep", "Family-Friendly"]
+    tags: ["High Protein"]
   },
 
   // ── FISH & SEAFOOD ──
@@ -1484,7 +1510,7 @@ const RECIPES = [
       { amount: "", item: "Salt, pepper, lemon" }
     ],
     steps: ["Season fillets on both sides.", "Cook in hot oil 3–4 min per side until flaky.", "Finish with a squeeze of lemon."],
-    tags: ["High Protein", "Gluten-Free", "Quick (under 10 min)"]
+    tags: ["High Protein", "Gluten-Free"]
   },
   {
     title: "Shrimp Tacos",
@@ -1500,7 +1526,7 @@ const RECIPES = [
       { amount: "", item: "Tortillas, slaw, lime, salsa" }
     ],
     steps: ["Season shrimp; cook 2–3 min per side.", "Assemble tacos with slaw and lime."],
-    tags: ["High Protein", "Gluten-Free", "Quick (under 10 min)"]
+    tags: ["High Protein", "Gluten-Free"]
   },
   {
     title: "Air Fryer Cod",
@@ -1516,7 +1542,7 @@ const RECIPES = [
       { amount: "", item: "Salt, pepper, fresh parsley" }
     ],
     steps: ["Pat fish dry; brush with oil.", "Season generously.", "Cook until fish flakes easily with a fork."],
-    tags: ["High Protein", "Gluten-Free", "Quick (under 10 min)"]
+    tags: ["High Protein", "Gluten-Free"]
   },
 
   // ── SOUPS ──
@@ -1535,7 +1561,7 @@ const RECIPES = [
       { amount: "½ tsp", item: "smoked paprika" }
     ],
     steps: ["Sauté onion + garlic; add spices.", "Add beans + broth; simmer 10 min.", "Blend half the soup for creaminess; season to taste."],
-    tags: ["Vegan", "Gluten-Free", "High Fiber", "Budget", "Meal Prep"]
+    tags: ["Vegan", "Gluten-Free", "High Fiber"]
   },
   {
     title: "Creamy Potato Soup",
@@ -1552,7 +1578,7 @@ const RECIPES = [
       { amount: "", item: "Salt, pepper, cheddar & sour cream to top" }
     ],
     steps: ["Sauté onion in butter; add potatoes + broth.", "Simmer until tender ~15 min.", "Partially mash or blend; stir in milk.", "Top with cheese and sour cream."],
-    tags: ["Vegetarian", "Gluten-Free", "Comfort Food", "Budget"]
+    tags: ["Vegetarian", "Gluten-Free"]
   },
   {
     title: "Classic Beef Chili",
@@ -1570,7 +1596,7 @@ const RECIPES = [
       { amount: "1 tsp", item: "cumin" }
     ],
     steps: ["Brown beef; drain fat.", "Add onion; cook 3 min.", "Add everything else; simmer 20+ min.", "Season and serve with toppings."],
-    tags: ["High Protein", "Gluten-Free", "Meal Prep", "Comfort Food"]
+    tags: ["High Protein", "Gluten-Free"]
   },
   {
     title: "Minestrone",
@@ -1589,7 +1615,7 @@ const RECIPES = [
       { amount: "1 tsp", item: "Italian seasoning" }
     ],
     steps: ["Sauté carrots + celery 5 min.", "Add everything except pasta; simmer 15 min.", "Add pasta last 8 min."],
-    tags: ["Vegan", "High Fiber", "Meal Prep", "Budget"]
+    tags: ["Vegan", "High Fiber"]
   },
 
   // ── SIDES & SALADS ──
@@ -1603,7 +1629,7 @@ const RECIPES = [
       { amount: "1 cup", item: "croutons" }
     ],
     steps: ["Toss romaine with dressing.", "Top with parmesan and croutons."],
-    tags: ["Vegetarian", "Quick (under 10 min)"]
+    tags: ["Vegetarian"]
   },
   {
     title: "Caprese Salad",
@@ -1616,7 +1642,7 @@ const RECIPES = [
       { amount: "", item: "Salt, pepper, balsamic glaze" }
     ],
     steps: ["Alternate tomato and mozzarella slices.", "Tuck basil between layers.", "Drizzle with oil and balsamic; season."],
-    tags: ["Vegetarian", "Gluten-Free", "Quick (under 10 min)"]
+    tags: ["Vegetarian", "Gluten-Free"]
   },
   {
     title: "Garlic Mashed Potatoes",
@@ -1632,7 +1658,7 @@ const RECIPES = [
       { amount: "", item: "Salt & pepper" }
     ],
     steps: ["Boil potatoes until fork-tender; drain.", "Mash with butter, milk, garlic.", "Season generously."],
-    tags: ["Vegetarian", "Gluten-Free", "Comfort Food"]
+    tags: ["Vegetarian", "Gluten-Free"]
   },
   {
     title: "Roasted Broccoli",
@@ -1647,7 +1673,7 @@ const RECIPES = [
       { amount: "", item: "Salt, pepper, lemon zest, parmesan (optional)" }
     ],
     steps: ["Toss broccoli with oil, garlic, salt.", "Roast until edges are crispy and charred.", "Finish with lemon and parmesan."],
-    tags: ["Vegan", "Gluten-Free", "Quick (under 10 min)"]
+    tags: ["Vegan", "Gluten-Free"]
   },
   {
     title: "Cucumber Tomato Salad",
@@ -1661,7 +1687,7 @@ const RECIPES = [
       { amount: "", item: "Salt, pepper, fresh dill or basil" }
     ],
     steps: ["Combine veg in bowl.", "Dress with oil + vinegar; season.", "Let sit 5 min before serving."],
-    tags: ["Vegan", "Gluten-Free", "Quick (under 10 min)", "Low Carb"]
+    tags: ["Vegan", "Gluten-Free", "Low Carb"]
   },
   {
     title: "Corn on the Cob",
@@ -1676,7 +1702,7 @@ const RECIPES = [
       { amount: "", item: "Salt, pepper; optional: chili, lime, cotija" }
     ],
     steps: ["Cook by chosen method until tender.", "Rub with butter; season."],
-    tags: ["Vegetarian", "Gluten-Free", "Quick (under 10 min)", "Family-Friendly"]
+    tags: ["Vegetarian", "Gluten-Free"]
   },
 
   // ── BREAKFAST ──
@@ -1692,7 +1718,7 @@ const RECIPES = [
       { amount: "", item: "Toppings: berries, banana, nut butter" }
     ],
     steps: ["Mix oats, milk, yogurt, chia, sweetener in a jar.", "Cover; refrigerate overnight.", "Top and eat cold."],
-    tags: ["Vegetarian", "Meal Prep", "Breakfast", "Budget"]
+    tags: ["Vegetarian"]
   },
   {
     title: "Banana Pancakes (2-Ingredient)",
@@ -1703,7 +1729,7 @@ const RECIPES = [
       { amount: "", item: "Pinch cinnamon, toppings of choice" }
     ],
     steps: ["Mash banana well; mix in eggs and cinnamon.", "Cook small pancakes on medium-low 2 min per side.", "Serve with fruit or syrup."],
-    tags: ["Gluten-Free", "Quick (under 10 min)", "Breakfast", "Budget", "Family-Friendly"]
+    tags: ["Gluten-Free"]
   },
   {
     title: "Smoothie Bowl",
@@ -1715,7 +1741,7 @@ const RECIPES = [
       { amount: "", item: "Toppings: granola, fruit, nut butter, seeds" }
     ],
     steps: ["Blend fruit + yogurt until thick — add liquid sparingly.", "Pour into bowl; add toppings."],
-    tags: ["Vegetarian", "Gluten-Free", "Breakfast", "Quick (under 10 min)"]
+    tags: ["Vegetarian", "Gluten-Free"]
   },
 
   // ── SNACKS & LIGHT BITES ──
@@ -1730,7 +1756,7 @@ const RECIPES = [
       { amount: "2 tbsp", item: "olive oil" }
     ],
     steps: ["Blend chickpeas, tahini, lemon, garlic, oil until smooth.", "Add reserved liquid to reach desired consistency.", "Season; drizzle with oil to serve."],
-    tags: ["Vegan", "Gluten-Free", "High Fiber", "Budget", "Quick (under 10 min)"]
+    tags: ["Vegan", "Gluten-Free", "High Fiber"]
   },
   {
     title: "Guacamole",
@@ -1744,7 +1770,7 @@ const RECIPES = [
       { amount: "", item: "Salt" }
     ],
     steps: ["Mash avocados to desired texture.", "Mix in remaining ingredients.", "Season; serve immediately."],
-    tags: ["Vegan", "Gluten-Free", "Quick (under 10 min)"]
+    tags: ["Vegan", "Gluten-Free"]
   },
   {
     title: "Cheese Quesadilla",
@@ -1758,7 +1784,7 @@ const RECIPES = [
       { amount: "", item: "Optional: beans, jalapeño, corn" }
     ],
     steps: ["Fill half the tortilla with cheese + fillings; fold.", "Cook medium heat 2–3 min per side until golden.", "Slice; serve with salsa or sour cream."],
-    tags: ["Vegetarian", "Quick (under 10 min)", "Family-Friendly", "Budget"]
+    tags: ["Vegetarian"]
   },
 
   // ── DESSERTS ──
@@ -1775,7 +1801,7 @@ const RECIPES = [
       { amount: "1 splash", item: "vanilla extract" }
     ],
     steps: ["Mix dry ingredients in a large mug.", "Add wet ingredients; mix well.", "Microwave 90 seconds — center will be slightly soft."],
-    tags: ["Vegetarian", "Dessert", "Quick (under 10 min)", "Budget"]
+    tags: ["Vegetarian", "Dessert"]
   },
   {
     title: "No-Bake Energy Balls",
@@ -1788,7 +1814,7 @@ const RECIPES = [
       { amount: "1 tbsp", item: "chia seeds (optional)" }
     ],
     steps: ["Mix all ingredients together.", "Refrigerate 30 min.", "Roll into 1-inch balls; keep refrigerated."],
-    tags: ["Vegetarian", "Dessert", "Meal Prep", "Budget"]
+    tags: ["Vegetarian", "Dessert"]
   },
   {
     title: "Air Fryer Donuts",
@@ -1800,7 +1826,7 @@ const RECIPES = [
       { amount: "", item: "Optional: sprinkles, cinnamon sugar" }
     ],
     steps: ["Cut a hole in each biscuit.", "Air fry 5 min until golden.", "Mix powdered sugar + milk for glaze; dip while warm."],
-    tags: ["Vegetarian", "Dessert", "Family-Friendly", "Quick (under 10 min)"]
+    tags: ["Vegetarian", "Dessert"]
   },
   {
     title: "Banana Nice Cream",
@@ -1810,7 +1836,7 @@ const RECIPES = [
       { amount: "", item: "Optional: peanut butter, cocoa powder, berries" }
     ],
     steps: ["Blend frozen banana chunks until smooth and creamy.", "Add any flavoring; blend again.", "Eat immediately or freeze 1 hr for firmer texture."],
-    tags: ["Vegan", "Gluten-Free", "Dessert", "Quick (under 10 min)", "Budget"]
+    tags: ["Vegan", "Gluten-Free", "Dessert"]
   },
 
   // ── INTERNATIONAL ──
@@ -1828,7 +1854,7 @@ const RECIPES = [
       { amount: "", item: "Cooked rice, green onion, sesame seeds" }
     ],
     steps: ["Brown ground beef; drain.", "Add garlic + ginger 1 min.", "Stir in soy, sugar, sesame oil, pepper flakes.", "Serve over rice with toppings."],
-    tags: ["High Protein", "Quick (under 10 min)", "Meal Prep"]
+    tags: ["High Protein"]
   },
   {
     title: "Miso Soup",
@@ -1841,7 +1867,7 @@ const RECIPES = [
       { amount: "2", item: "green onions, sliced" }
     ],
     steps: ["Bring water to near boil — do not boil.", "Whisk in miso until dissolved.", "Add tofu + wakame; heat 2 min.", "Top with green onion."],
-    tags: ["Vegan", "Quick (under 10 min)"]
+    tags: ["Vegan"]
   },
   {
     title: "Fried Plantains (Tostones)",
@@ -1870,13 +1896,37 @@ const RECIPES = [
   // ─────────────────────────────────────────────────────────────
 ];
 
-// Collect all unique tags
-const allTags = [...new Set(RECIPES.flatMap(r => r.tags))].sort();
+// ── ALLOWED TAGS (dietary & allergen only) ──
+const ALLOWED_TAGS = new Set([
+  "Diabetic Friendly", "High Fiber", "High Protein", "Low Carb", "Keto",
+  "Vegan", "Vegetarian", "Gluten-Free", "Low Sodium", "Halal", "Kosher",
+  "Nut-Free", "Lactose-Free", "Dairy-Free"
+]);
+
+// Strip non-allowed tags from all recipes
+RECIPES.forEach(r => {
+  r.tags = r.tags.filter(t => ALLOWED_TAGS.has(t));
+});
+
+// Collect tags that actually appear
+const allTags = [...new Set(RECIPES.flatMap(r => r.tags))]
+  .filter(t => ALLOWED_TAGS.has(t))
+  .sort();
 
 // State
 let activeTag = null;
 let searchQuery = '';
-const scales = {}; // per-recipe scale multipliers
+let afMode = false;        // true = Air Fryer tab active
+let hasInteracted = false; // recipes hidden until user searches/taps a tag
+const scales = {};
+
+function setTab(tab) {
+  afMode = (tab === 'af');
+  document.getElementById('allTab').classList.toggle('active', !afMode);
+  document.getElementById('afTab').classList.toggle('active', afMode);
+  hasInteracted = true;
+  filterRecipes();
+}
 
 function buildTagFilters() {
   const wrap = document.getElementById('tagFilters');
@@ -1892,6 +1942,7 @@ function buildTagFilters() {
         activeTag = tag;
         btn.classList.add('active');
       }
+      hasInteracted = true;
       filterRecipes();
     };
     wrap.appendChild(btn);
@@ -1909,6 +1960,7 @@ function renderRecipes() {
     card.dataset.idx = i;
     card.dataset.tags = r.tags.join(',').toLowerCase();
     card.dataset.title = r.title.toLowerCase();
+    card.dataset.hasaf = r.times.some(t => t.af) ? 'true' : 'false';
 
     // Times
     const timesHtml = r.times.map(t =>
@@ -1982,13 +2034,24 @@ function changeScale(idx, delta) {
 function filterRecipes() {
   const q = searchQuery.toLowerCase();
   let visible = 0;
+
+  // Hide everything on load until user interacts
+  if (!hasInteracted) {
+    document.querySelectorAll('.recipe-card').forEach(c => c.classList.add('hidden'));
+    document.getElementById('noResults').classList.remove('visible');
+    document.getElementById('resultsBar').textContent = '';
+    return;
+  }
+
   document.querySelectorAll('.recipe-card').forEach(card => {
-    const titleMatch = card.dataset.title.includes(q);
+    const titleMatch = !q || card.dataset.title.includes(q);
     const tagMatch = !activeTag || card.dataset.tags.includes(activeTag.toLowerCase());
-    const show = titleMatch && tagMatch;
+    const afMatch = !afMode || card.dataset.hasaf === 'true';
+    const show = titleMatch && tagMatch && afMatch;
     card.classList.toggle('hidden', !show);
     if (show) visible++;
   });
+
   document.getElementById('noResults').classList.toggle('visible', visible === 0);
   document.getElementById('resultsBar').textContent = `${visible} recipe${visible !== 1 ? 's' : ''}`;
 }
@@ -1996,6 +2059,7 @@ function filterRecipes() {
 // Search
 document.getElementById('search').addEventListener('input', e => {
   searchQuery = e.target.value;
+  if (searchQuery.length > 0) hasInteracted = true;
   filterRecipes();
 });
 
